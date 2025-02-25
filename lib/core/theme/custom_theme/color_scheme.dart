@@ -6,7 +6,8 @@ class CustomColorScheme {
   static final Color grayColor = Color(0xFFF7F7F7);
   static final Color yellowColor = Color(0xFFF8D748);
   static final Color redColor = Color(0xFFF23F3F);
-  static final Color blackColor = Color(0xFF141A2B);
+  static final Color blackColor = Color(0xFF0E121F);
+  static final Color grayBlackColor = Color(0xFF141A2B);
 
   // Light Color Scheme
   static ColorScheme lightColorScheme = ColorScheme(
@@ -30,7 +31,7 @@ class CustomColorScheme {
     onSecondary: whiteColor,
     error: redColor,
     onError: blackColor,
-    surface: blackColor,
+    surface: grayBlackColor,
     onSurface: whiteColor,
   );
 }

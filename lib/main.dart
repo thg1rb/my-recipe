@@ -5,7 +5,7 @@ import 'package:my_recipe/providers/bottom_navbar_provider.dart';
 import 'package:my_recipe/screens/bookmark.dart';
 import 'package:my_recipe/screens/home.dart';
 import 'package:my_recipe/screens/profile.dart';
-import 'package:my_recipe/widgets/bottom_navbar.dart';
+import 'package:my_recipe/widgets/navigation_bar/bottom_navbar.dart';
 
 void main() {
   runApp(ProviderScope(child: MyApp()));
@@ -28,11 +28,15 @@ class MyApp extends ConsumerWidget {
       theme: CustomTheme.lightTheme,
       darkTheme: CustomTheme.darkTheme,
       home: Scaffold(
-        body: bottomNavbarScreens[bottomNavbarIndex],
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: bottomNavbarScreens[bottomNavbarIndex],
+        ),
         bottomNavigationBar: BottomNavbar(
           index: bottomNavbarIndex,
           onChangeIndex:
-              (index) => ref.read(bottomNavbarIndexProvider.notifier).state = index,
+              (index) =>
+                  ref.read(bottomNavbarIndexProvider.notifier).state = index,
         ),
       ),
     );
