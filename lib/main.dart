@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/theme.dart';
 import 'package:my_recipe/providers/bottom_navbar_provider.dart';
+import 'package:my_recipe/providers/theme_provider.dart';
 import 'package:my_recipe/screens/bookmark.dart';
 import 'package:my_recipe/screens/home.dart';
 import 'package:my_recipe/screens/profile.dart';
@@ -25,8 +26,10 @@ class MyApp extends ConsumerWidget {
     int bottomNavbarIndex = ref.watch(bottomNavbarIndexProvider);
     return MaterialApp(
       title: 'MyRecipe!',
-      theme: CustomTheme.lightTheme,
-      darkTheme: CustomTheme.darkTheme,
+      theme:
+          ref.watch(isDarkTheme)
+              ? CustomTheme.darkTheme
+              : CustomTheme.lightTheme,
       home: Scaffold(
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
