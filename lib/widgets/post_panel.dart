@@ -19,120 +19,124 @@ class PostScreen extends ConsumerWidget {
         scrollDirection: Axis.vertical,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-          child: Wrap(
-            alignment: WrapAlignment.center,
-            runSpacing: 20,
+          child: Column(
             children: [
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  fixedSize: Size(400, 220),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.image, color: Colors.white, size: 60),
-                    Text(
-                      "อัปโหลดรูปภาพ",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.normal,
+              Wrap(
+                alignment: WrapAlignment.center,
+                runSpacing: 50,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      fixedSize: Size(400, 220),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  fixedSize: Size(400, 80),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.image, color: Colors.white, size: 60),
+                        Text(
+                          "อัปโหลดรูปภาพ",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.movie_filter, color: Colors.white, size: 40),
-                    SizedBox(width: 20),
-                    Text(
-                      "อัปโหลดวิดีโอ",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.normal,
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      fixedSize: Size(400, 80),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 56,
-                child: TextField(
-                  decoration: InputDecoration(
-                    label: Text("ชื่อเมนู"),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    border: OutlineInputBorder(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.movie_filter, color: Colors.white, size: 40),
+                        SizedBox(width: 20),
+                        Text(
+                          "อัปโหลดวิดีโอ",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  maxLines: null,
-                  expands: true,
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-              SizedBox(
-                height: 150,
-                child: TextField(
-                  decoration: InputDecoration(
-                    label: Text('รายละเอียด'),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                    height: 56,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        label: Text("ชื่อเมนู"),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: null,
+                      expands: true,
+                      style: TextStyle(fontSize: 14),
+                    ),
                   ),
-                  textAlignVertical: TextAlignVertical.top,
-                  maxLines: null,
-                  expands: true,
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-              SizedBox(
-                height: 150,
-                child: TextField(
-                  decoration: InputDecoration(
-                    label: Text("วัภถุดิบที่ใช้"),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                    height: 150,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        label: Text('รายละเอียด'),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        border: OutlineInputBorder(),
+                      ),
+                      textAlignVertical: TextAlignVertical.top,
+                      maxLines: null,
+                      expands: true,
+                      style: TextStyle(fontSize: 14),
+                    ),
                   ),
-                  textAlignVertical: TextAlignVertical.top,
-                  maxLines: null,
-                  expands: true,
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-              SizedBox(
-                height: 150,
-                child: TextField(
-                  decoration: InputDecoration(
-                    label: Text("ขั้นตอนวิธีทำ"),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                    height: 150,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        label: Text("วัภถุดิบที่ใช้"),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        border: OutlineInputBorder(),
+                      ),
+                      textAlignVertical: TextAlignVertical.top,
+                      maxLines: null,
+                      expands: true,
+                      style: TextStyle(fontSize: 14),
+                    ),
                   ),
-                  textAlignVertical: TextAlignVertical.top,
-                  maxLines: null,
-                  expands: true,
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+                  SizedBox(
+                    height: 150,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        label: Text("ขั้นตอนวิธีทำ"),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        border: OutlineInputBorder(),
+                      ),
+                      textAlignVertical: TextAlignVertical.top,
+                      maxLines: null,
+                      expands: true,
+                      style: TextStyle(fontSize: 14),
+                    ),
                   ),
-                ),
-                child: Text('เผยแพร่สูตรอาหาร', style: TextStyle(fontSize: 20)),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Text('เผยแพร่สูตรอาหาร', style: TextStyle(fontSize: 20)),
+                  ),
+                ],
               ),
             ],
           ),
