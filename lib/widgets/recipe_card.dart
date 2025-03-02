@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:my_recipe/models/food_recipe.dart';
+import 'package:my_recipe/screens/recipe.dart';
 
 class RecipeCard extends StatelessWidget {
   const RecipeCard({
     super.key,
-    required String title,
-    required int like,
-    required String difficulty,
-    required String imageUrl,
-  }) : _title = title,
-       _like = like,
-       _difficulty = difficulty,
-       _imageUrl = imageUrl;
+    required this.recipe
+  }) ;
 
-  final String _title;
-  final int _like;
-  final String _difficulty;
-  final String _imageUrl;
+  final FoodRecipe recipe;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +16,9 @@ class RecipeCard extends StatelessWidget {
       color: Theme.of(context).colorScheme.onPrimary,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder:(context) => RecipeScreen(recipe: recipe)));
+        },
         child: SizedBox(
           width: 170,
           child: Column(
@@ -33,49 +28,47 @@ class RecipeCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.asset(
-                    _imageUrl,
+                    recipe.image,
                     width: double.infinity,
                     height: 90,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(_title, style: Theme.of(context).textTheme.bodyMedium),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Icon(Icons.favorite_rounded, size: 15),
-                            Text(
-                              _like.toString(),
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Icon(Icons.local_dining_rounded, size: 15),
-                            Text(
-                              _difficulty,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(recipe.title, style: Theme.of(context).textTheme.bodyMedium),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.favorite_rounded, size: 15),
+                          Text(
+                            recipe.likes.toString(),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.local_dining_rounded, size: 15),
+                          Text(
+                            recipe.difficulty,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
+      
     );
   }
 }
