@@ -3,7 +3,11 @@ class FoodRecipe {
   String _image;
   String _difficulty;
   String _category;
+  String _description;
+  List<String> _ingredients;
+  String _instruction;
   int _likes;
+  
 
   FoodRecipe({
     required String title,
@@ -11,11 +15,17 @@ class FoodRecipe {
     required String difficulty,
     required String category,
     required int likes,
+    required String description,
+    required List<String> ingredients, 
+    required String instruction,
   })  : _title = title,
         _image = image,
         _difficulty = difficulty,
         _category = category,
-        _likes = likes;
+        _likes = likes,
+        _description = description,
+        _ingredients = ingredients,
+        _instruction = instruction;
   
 
   factory FoodRecipe.fromMap(Map<String, dynamic> map) {
@@ -25,6 +35,9 @@ class FoodRecipe {
       difficulty: map['difficulty'],
       category: map['category'],
       likes: map['like'],
+      description: map['description'],
+      ingredients: map['ingredients'],
+      instruction: map['instruction'],
     );
   }
 
@@ -34,6 +47,10 @@ class FoodRecipe {
   String get difficulty => _difficulty;
   String get category => _category;
   int get likes => _likes;
+  String get description => _description;
+  List<String> get ingredients => _ingredients;
+  String get instruction => _instruction;
+
 
 
   // Setters

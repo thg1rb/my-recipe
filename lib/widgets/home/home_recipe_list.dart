@@ -10,6 +10,9 @@ final List<Map<String, dynamic>> recipeList = <Map<String, dynamic>>[
     "category": "ข้าวผัด",
     "difficulty": "ง่าย",
     "imageUrl": "assets/images/pad_kra_pao.png",
+    "description": "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
+    "ingredients": ["เนื้อหทูเด้ง 100 กรัม", "เนื้อหมูสับ 50 กรัม", "ใบกะเพรา 20 กรัม", "ข้าวเปล่า 4 ทัพพี", "ไข่ 1 ฟอง"],
+    "instruction": "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ "
   },
   {
     "title": "กะเพราหมูเด้ง",
@@ -17,6 +20,9 @@ final List<Map<String, dynamic>> recipeList = <Map<String, dynamic>>[
     "category": "ข้าวผัด",
     "difficulty": "ง่าย",
     "imageUrl": "assets/images/pad_kra_pao.png",
+    "description": "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
+    "ingredients": ["เนื้อหทูเด้ง 100 กรัม", "เนื้อหมูสับ 50 กรัม", "ใบกะเพรา 20 กรัม", "ข้าวเปล่า 4 ทัพพี", "ไข่ 1 ฟอง"],
+    "instruction": "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ "
   },
   {
     "title": "กะเพราหมูเด้ง",
@@ -24,6 +30,9 @@ final List<Map<String, dynamic>> recipeList = <Map<String, dynamic>>[
     "category": "ข้าวผัด",
     "difficulty": "ง่าย",
     "imageUrl": "assets/images/pad_kra_pao.png",
+    "description": "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
+    "ingredients": ["เนื้อหทูเด้ง 100 กรัม", "เนื้อหมูสับ 50 กรัม", "ใบกะเพรา 20 กรัม", "ข้าวเปล่า 4 ทัพพี", "ไข่ 1 ฟอง"],
+    "instruction": "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ "
   },
   {
     "title": "กะเพราหมูเด้ง",
@@ -31,6 +40,9 @@ final List<Map<String, dynamic>> recipeList = <Map<String, dynamic>>[
     "category": "ข้าวผัด",
     "difficulty": "ง่าย",
     "imageUrl": "assets/images/pad_kra_pao.png",
+    "description": "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
+    "ingredients": ["เนื้อหทูเด้ง 100 กรัม", "เนื้อหมูสับ 50 กรัม", "ใบกะเพรา 20 กรัม", "ข้าวเปล่า 4 ทัพพี", "ไข่ 1 ฟอง"],
+    "instruction": "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ "
   },
   {
     "title": "กะเพราหมูเด้ง",
@@ -38,6 +50,9 @@ final List<Map<String, dynamic>> recipeList = <Map<String, dynamic>>[
     "category": "ข้าวผัด",
     "difficulty": "ง่าย",
     "imageUrl": "assets/images/pad_kra_pao.png",
+    "description": "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
+    "ingredients": ["เนื้อหทูเด้ง 100 กรัม", "เนื้อหมูสับ 50 กรัม", "ใบกะเพรา 20 กรัม", "ข้าวเปล่า 4 ทัพพี", "ไข่ 1 ฟอง"],
+    "instruction": "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ "
   },
 ];
 final List<FoodRecipe> recipes = recipeList.map((map) => FoodRecipe.fromMap(map)).toList();
