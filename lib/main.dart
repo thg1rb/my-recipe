@@ -25,7 +25,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     int bottomNavbarIndex = ref.watch(bottomNavbarIndexProvider);
     return MaterialApp(
-      title: 'MyRecipe!',
+      title: 'MyRecipe! ',
       theme:
           ref.watch(isDarkTheme)
               ? CustomTheme.darkTheme
