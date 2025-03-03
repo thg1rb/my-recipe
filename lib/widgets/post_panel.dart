@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_recipe/widgets/post/form.dart';
+import 'package:my_recipe/widgets/post/upload.dart';
 
 class PostScreen extends ConsumerWidget {
   const PostScreen({super.key});
@@ -23,110 +25,28 @@ class PostScreen extends ConsumerWidget {
             children: [
               Wrap(
                 alignment: WrapAlignment.center,
-                runSpacing: 50,
+                runSpacing: 20,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      fixedSize: Size(400, 220),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.image, color: Colors.white, size: 60),
-                        Text(
-                          "อัปโหลดรูปภาพ",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
+                  UploadButton(
+                    btnSize: Size(400, 220),
+                    text: 'อัปโหลดรูปภาพ',
+                    icon: Icons.image,
+                    iconSize: 60,
+                    isRow: false,
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      fixedSize: Size(400, 80),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.movie_filter, color: Colors.white, size: 40),
-                        SizedBox(width: 20),
-                        Text(
-                          "อัปโหลดวิดีโอ",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
+                  UploadButton(
+                    btnSize: Size(400, 80),
+                    text: 'อัปโหลดวิดีโอ',
+                    icon: Icons.movie_filter,
+                    iconSize: 40,
+                    isRow: true,
                   ),
-                  SizedBox(
-                    height: 56,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        label: Text("ชื่อเมนู"),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: null,
-                      expands: true,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 150,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        label: Text('รายละเอียด'),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        border: OutlineInputBorder(),
-                      ),
-                      textAlignVertical: TextAlignVertical.top,
-                      maxLines: null,
-                      expands: true,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 150,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        label: Text("วัภถุดิบที่ใช้"),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        border: OutlineInputBorder(),
-                      ),
-                      textAlignVertical: TextAlignVertical.top,
-                      maxLines: null,
-                      expands: true,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 150,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        label: Text("ขั้นตอนวิธีทำ"),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        border: OutlineInputBorder(),
-                      ),
-                      textAlignVertical: TextAlignVertical.top,
-                      maxLines: null,
-                      expands: true,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
+                  FineDropDownBox(title: 'ประเภทอาหาร', items: ['เมนูข้าว', 'เมนูเส้น', 'ของหวาน'], colors: [Colors.yellow,Colors.yellow,Colors.yellow], id: 'cateDropdown'),
+                  FineDropDownBox(title: 'ระดับความยาก',items: ['ง่าย','ปานกลาง','ยาก'], colors: [Colors.lightGreenAccent, Colors.orangeAccent,Colors.redAccent], id: 'diffDropDown'),
+                  CustomTextField(label: 'ชื่อเมนู', height: 56),
+                  CustomTextField(label: 'รายละเอียด', height: 150),
+                  CustomTextField(label: 'วัตถุดิบที่ใช้', height: 150),
+                  CustomTextField(label: 'ขั้นตอนวิธีทำ', height: 150),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
@@ -134,7 +54,10 @@ class PostScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    child: Text('เผยแพร่สูตรอาหาร', style: TextStyle(fontSize: 20)),
+                    child: Text(
+                      'เผยแพร่สูตรอาหาร',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ],
               ),
@@ -146,6 +69,7 @@ class PostScreen extends ConsumerWidget {
   }
 }
 
+// Slide Transiton Build
 Route createRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => const PostScreen(),
