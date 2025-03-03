@@ -8,7 +8,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent),
       floatingActionButton: IconButton(
         onPressed: () {},
         icon: Icon(Icons.add_rounded, size: 35),
@@ -17,19 +16,22 @@ class HomeScreen extends StatelessWidget {
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: <Widget>[
-            HomeHeader(username: "kkerdsiri_", profileUrl: ""),
-            HomeSearchBar(),
-            HomeCategoryList(),
-            HomeRecipeList(title: "แนะนำสำหรับคุณ"),
-            HomeRecipeList(title: "Like มากที่สุด"),
-            HomeRecipeList(title: "มีวิดีโอให้ดู"),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 70),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: <Widget>[
+              HomeHeader(username: "kkerdsiri_", profileUrl: ""),
+              HomeSearchBar(),
+              HomeCategoryList(),
+              HomeRecipeList(title: "แนะนำสำหรับคุณ"),
+              HomeRecipeList(title: "Like มากที่สุด"),
+              HomeRecipeList(title: "มีวิดีโอให้ดู"),
+            ],
+          ),
         ),
       ),
     );
