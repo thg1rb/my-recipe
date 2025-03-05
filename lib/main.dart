@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/theme.dart';
 import 'package:my_recipe/providers/bottom_navbar_provider.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
-import 'package:my_recipe/screens/bookmark.dart';
-import 'package:my_recipe/screens/home.dart';
-import 'package:my_recipe/screens/profile.dart';
+import 'package:my_recipe/screens/bookmark_screen.dart';
+import 'package:my_recipe/screens/home_screen.dart';
+import 'package:my_recipe/screens/profile_screen.dart';
 import 'package:my_recipe/widgets/navigation_bar/bottom_navbar.dart';
 
 void main() {

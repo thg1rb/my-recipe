@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
-import 'package:my_recipe/screens/premium_ad.dart';
+import 'package:my_recipe/screens/premium_ad_screen.dart';
 
 final Size buttonFixedSize = Size.fromWidth(190);
 
