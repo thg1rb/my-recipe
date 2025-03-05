@@ -17,7 +17,9 @@ class CustomTextField extends ConsumerWidget {
           label: Text(label),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           border: OutlineInputBorder(),
-          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: CustomColorScheme.yellowColor)),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: CustomColorScheme.yellowColor),
+          ),
         ),
         textAlignVertical: TextAlignVertical.top,
         maxLines: null,
@@ -66,22 +68,29 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
                 child: ListView.builder(
                   itemCount: widget.items.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            index == (widget.items.length - 1)
-                                ? BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                )
-                                : BorderRadius.all(Radius.zero),
-                        color: widget.colors[index],
-                      ),
-                      child: Center(
-                        child: Text(
-                          widget.items[index],
-                          style: TextStyle(fontSize: 24, color: Colors.white),
+                    return InkWell(
+                      onTap: () {
+                        ref
+                            .read(dropDownStateProvider(widget.id).notifier)
+                            .state = !showDropDown;
+                      },
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              index == (widget.items.length - 1)
+                                  ? BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                  )
+                                  : BorderRadius.all(Radius.zero),
+                          color: widget.colors[index],
+                        ),
+                        child: Center(
+                          child: Text(
+                            widget.items[index],
+                            style: TextStyle(fontSize: 24, color: Colors.white),
+                          ),
                         ),
                       ),
                     );
