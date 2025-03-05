@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
+import 'package:my_recipe/screens/premium_ad.dart';
 
 final Size buttonFixedSize = Size.fromWidth(190);
-final OutlinedBorder buttonShape = RoundedRectangleBorder(
-  borderRadius: BorderRadius.circular(10),
-);
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -24,7 +22,6 @@ class ProfileScreen extends StatelessWidget {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               fixedSize: buttonFixedSize,
-              shape: buttonShape,
             ),
             onPressed: () {},
             child: Row(
@@ -72,7 +69,6 @@ class _ProfileHeader extends StatelessWidget {
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             fixedSize: buttonFixedSize,
-            shape: buttonShape,
           ),
           child: Text("แก้ไขข้อมูล"),
         ),
@@ -81,9 +77,13 @@ class _ProfileHeader extends StatelessWidget {
             fixedSize: buttonFixedSize,
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
             foregroundColor: Theme.of(context).colorScheme.primary,
-            shape: buttonShape,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PremiumAdScreen()),
+            );
+          },
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -185,7 +185,7 @@ class _ProfileSettingState extends State<_ProfileSetting> {
                   ),
                 ],
               );
-            }
+            },
           ),
         ),
       ],
