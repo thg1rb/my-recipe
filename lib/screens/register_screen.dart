@@ -16,7 +16,7 @@ class RegisterScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Wrap(
-          runSpacing: 10,
+          runSpacing: 10, // Spaces in horizontal-axis
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -45,15 +45,30 @@ class _RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<_RegisterForm> {
+  // Global Key for Form
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // TextFormField Controllers
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
+  // Obsecured the Passwords: (Default) invisible passwords
   bool _isObsecurePassword = true;
   bool _isObsecureConfirmPassword = true;
+
+  // CheckBoxListTile: (Default) not checked the box
   bool _isAcceptedTheConditions = false;
+
+  @override
+  void dispose() {
+    // Remove the controllers from memory if not use anymore.
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

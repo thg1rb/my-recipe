@@ -11,7 +11,7 @@ class LoginScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.only(top: 115, left: 15, right: 15),
         child: Wrap(
-          runSpacing: 10,
+          runSpacing: 10, // Spaces in horizontal-axis
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -40,16 +40,22 @@ class _LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<_LoginForm> {
+  // Global Key for Form
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
+
+  // TextFormField Controllers
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _isObsecureText = true; // Visible or Invisible password
+  // Obsecured the Passwords: (Default) invisible passwords
+  bool _isObsecureText = true;
 
   @override
   void dispose() {
+    // Remove the controllers from memory if not use anymore.
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
-    // Controllers
   }
 
   @override
@@ -68,7 +74,7 @@ class _LoginFormState extends State<_LoginForm> {
               runSpacing: 10,
               children: <Widget>[
                 TextFormField(
-                  controller: _usernameController,
+                  controller: _emailController,
                   validator: (value) {
                     if (value == null ||
                         value.isEmpty ||
@@ -153,7 +159,6 @@ class _LoginFormState extends State<_LoginForm> {
                             builder: (context) => RegisterScreen(),
                           ),
                         );
-                        print("Navigate to Register Page");
                       },
                       child: Text(
                         "กดเพื่อสมัครบัญชี",
