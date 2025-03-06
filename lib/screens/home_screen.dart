@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_recipe/screens/login_screen.dart';
 import 'package:my_recipe/widgets/home/home_category_list.dart';
 import 'package:my_recipe/widgets/home/home_recipe_list.dart';
 
@@ -9,7 +10,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: IconButton(
-        onPressed: () {},
+        onPressed:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+            ),
         icon: Icon(Icons.add_rounded, size: 35),
         style: IconButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -123,11 +128,15 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
                 prefixIconColor: Theme.of(context).colorScheme.onSurface,
                 fillColor: Theme.of(context).colorScheme.onPrimary,
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   borderRadius: BorderRadius.circular(30),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
