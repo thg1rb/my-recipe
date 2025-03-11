@@ -30,7 +30,6 @@ class HomeScreen extends StatelessWidget {
             runSpacing: 10,
             children: <Widget>[
               HomeHeader(username: "kkerdsiri_", profileUrl: ""),
-              HomeSearchBar(),
               HomeCategoryList(),
               HomeRecipeList(title: "แนะนำสำหรับคุณ"),
               HomeRecipeList(title: "Like มากที่สุด"),
@@ -84,75 +83,6 @@ class HomeHeader extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-// Home Search Bar
-class HomeSearchBar extends StatefulWidget {
-  const HomeSearchBar({super.key});
-
-  @override
-  State<HomeSearchBar> createState() => _HomeSearchBarState();
-}
-
-class _HomeSearchBarState extends State<HomeSearchBar> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController searchBarController = TextEditingController();
-
-  @override
-  void dispose() {
-    searchBarController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: TextFormField(
-              controller: searchBarController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "กรุณาระบุสูตรอาหารที่ต้องการ";
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                filled: true,
-                prefixIcon: Icon(Icons.search_rounded),
-                prefixIconColor: Theme.of(context).colorScheme.onSurface,
-                fillColor: Theme.of(context).colorScheme.onPrimary,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 20),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                print(searchBarController.text);
-              }
-            },
-            child: Text("ค้นหา"),
-          ),
-        ],
-      ),
     );
   }
 }

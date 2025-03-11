@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/custom_theme/color_scheme.dart';
-import 'package:my_recipe/models/food_recipe.dart';
 import 'package:my_recipe/widgets/recipe/details.dart';
 import 'package:my_recipe/widgets/recipe/details_bar.dart';
 
 class RecipeScreen extends ConsumerWidget {
   const RecipeScreen({super.key, required this.recipe});
 
-  final FoodRecipe recipe;
+  final Map<String, dynamic> recipe;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +32,7 @@ class RecipeScreen extends ConsumerWidget {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(recipe.image),
+                      image: AssetImage(recipe["imageUrl"]),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -43,7 +42,7 @@ class RecipeScreen extends ConsumerWidget {
                     top: 160,
                     left: 40,
                     right: 40,
-                    bottom: 12
+                    bottom: 12,
                   ),
 
                   child: Column(
@@ -64,7 +63,7 @@ class RecipeScreen extends ConsumerWidget {
                           child: Column(
                             children: [
                               Text(
-                                recipe.title,
+                                recipe["title"],
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -103,7 +102,7 @@ class RecipeScreen extends ConsumerWidget {
                                 children: [
                                   _buildIconText(
                                     icon: Icons.dining,
-                                    text: recipe.difficulty,
+                                    text: recipe["difficulty"],
                                   ),
                                   _buildIconText(
                                     icon: Icons.remove_red_eye,
@@ -111,7 +110,7 @@ class RecipeScreen extends ConsumerWidget {
                                   ),
                                   _buildIconText(
                                     icon: Icons.favorite,
-                                    text: recipe.likes.toString(),
+                                    text: recipe["likes"].toString(),
                                   ),
                                 ],
                               ),
@@ -125,7 +124,7 @@ class RecipeScreen extends ConsumerWidget {
               ],
             ),
             DetailsBar(),
-            Detail(recipe: recipe)
+            Detail(recipe: recipe),
           ],
         ),
       ),
