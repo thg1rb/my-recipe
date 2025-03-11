@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_recipe/services/auth_services.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -60,6 +61,12 @@ class _RegisterFormState extends State<_RegisterForm> {
 
   // CheckBoxListTile: (Default) not checked the box
   bool _isAcceptedTheConditions = false;
+
+  // AuthServices Instance
+  final AuthServices _authServices = AuthServices();
+
+  // Check if registering
+  bool _isRegistering = false;
 
   @override
   void dispose() {
@@ -240,14 +247,93 @@ class _RegisterFormState extends State<_RegisterForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate() &&
-                            _isAcceptedTheConditions) {
-                          print("Register Sucessfully!");
-                        }
-                      },
-                      child: Text("ยืนยันการลงทะเบียน"),
+                    SizedBox(
+                      width: 270,
+                      child: ElevatedButton(
+                        onPressed:
+                            _isRegistering
+                                ? null
+                                : () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).clearSnackBars();
+                                    if (!_isAcceptedTheConditions) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            "กรุณายอมรับข้อกำหนดการใช้บริการ",
+                                          ),
+                                          backgroundColor:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.error,
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    setState(() {
+                                      _isRegistering = true;
+                                    });
+
+                                    final String? errorMessage =
+                                        await _authServices.registerWithManual(
+                                          _emailController.text,
+                                          _passwordController.text,
+                                        );
+
+                                    setState(() {
+                                      _isRegistering = false;
+                                    });
+
+                                    if (errorMessage != null) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(errorMessage),
+                                          backgroundColor:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.error,
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.pop(context);
+                                      SnackBar(
+                                        content: Text("ลงทะเบียนสำเร็จ"),
+                                        backgroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
+                                      );
+                                    }
+                                  }
+                                },
+                        child:
+                            _isRegistering
+                                ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                    Text("กำลังลงทะเบียน..."),
+                                  ],
+                                )
+                                : Text("ยืนยันการลงทะเบียน"),
+                      ),
                     ),
                   ],
                 ),

@@ -5,50 +5,54 @@ class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Sign In Manually Way
-  void signInWithManual(String emailAddress, String password) async {
+  Future<String?> signInWithManual(String emailAddress, String password) async {
     try {
       final credential = await _auth.signInWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
       print(credential.user?.uid);
+      return null; // No error
     } on FirebaseAuthException catch (e) {
-      // TODO: Login Failed Dialog Alert
-      // print(e.code);
       if (e.code == "invalid-email") {
-        print("อีเมลล์ไม่ถูกต้อง");
+        return "❌ อีเมลล์ไม่ถูกต้อง";
       } else if (e.code == "invalid-credential") {
-        print("เข้าสู่ระบบไม่สำเร็จ");
+        return "❌ เข้าสู่ระบบไม่สำเร็จ";
+      } else {
+        return "❌ เกิดข้อผิดพลาดในการเข้าสู่ระบบ";
       }
     }
   }
 
   // Register Manually Way
-  void registerWithManual(String emailAddress, String password) async {
+  Future<String?> registerWithManual(
+    String emailAddress,
+    String password,
+  ) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
       print(credential.user?.uid);
+      return null; // No error
     } on FirebaseAuthException catch (e) {
-      // TODO: Registration Failed Dialog Alert
-      // print(e.code);
       if (e.code == "email-already-in-use") {
-        print("อีเมลล์นี้ถูกใช้งานแล้ว");
+        return "🔒 อีเมลล์นี้ถูกใช้งานแล้ว";
       } else if (e.code == "weak-password") {
-        print("รหัสผ่านไม่แข็งแรงพอ");
+        return "🔒 รหัสผ่านไม่แข็งแรงพอ";
+      } else {
+        return "❌ เกิดข้อผิดพลาดในการลงทะเบียน";
       }
     }
   }
 
-  // Sign In With Google
-  Future<void> signInWithGoogle() async {
+  // Sign in with Google
+  Future<String?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
-        print("Google Sign-In canceled by user.");
-        return;
+        return "🔒 การเข้าสู่ระบบด้วย Google ไม่สำเร็จ";
       }
 
       final GoogleSignInAuthentication googleAuth =
@@ -63,10 +67,17 @@ class AuthServices {
         credential,
       );
       print("Google Sign-In successful: ${userCredential.user?.uid}");
+      return null; // No error
     } on FirebaseAuthException catch (e) {
-      print("Google Sign-In failed: ${e.message}");
+      return "❌ การเข้าสู่ระบบด้วย Google ไม่สำเร็จ: $e";
     } catch (e) {
-      print("Unexpected error during Google Sign-In: $e");
+      return "❌ เกิดข้อผิดพลาดที่ไม่คาดคิดในระบบ: $e";
     }
+  }
+
+  // Sign out Google
+  Future<void> signOutGoogle() async {
+    await GoogleSignIn().signOut();
+    print("Google Sign-Out successful");
   }
 }

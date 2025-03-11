@@ -51,7 +51,12 @@ class _LoginFormState extends State<_LoginForm> {
   // Obsecured the Passwords: (Default) invisible passwords
   bool _isObsecureText = true;
 
+  // AuthServices Instance
   final AuthServices _authServices = AuthServices();
+
+  // Check if signing in
+  bool _isSigningIn = false;
+  bool _isSigningInWithGoogle = false;
 
   @override
   void dispose() {
@@ -177,16 +182,91 @@ class _LoginFormState extends State<_LoginForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          AuthServices().signInWithManual(
-                            _emailController.text,
-                            _passwordController.text,
-                          );
-                        }
-                      },
-                      child: Text("เข้าสู่ระบบ"),
+                    SizedBox(
+                      width: 230,
+                      child: ElevatedButton(
+                        onPressed:
+                            _isSigningIn
+                                ? null
+                                : () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    setState(() {
+                                      _isSigningIn = true;
+                                    });
+                                    final String? errorMessage =
+                                        await _authServices.signInWithManual(
+                                          _emailController.text,
+                                          _passwordController.text,
+                                        );
+                                    setState(() {
+                                      _isSigningIn = false;
+                                    });
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).clearSnackBars();
+                                    if (errorMessage != null) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            errorMessage,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          backgroundColor:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.error,
+                                        ),
+                                      );
+                                    } else {
+                                      // Clear Controllers
+                                      _emailController.clear();
+                                      _passwordController.clear();
+
+                                      // Show SnackBar
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            "✅ เข้าสู่ระบบสำเร็จ",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          backgroundColor:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onPrimary,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                        child:
+                            _isSigningIn
+                                ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                    Text("กำลังเข้าสู่ระบบ..."),
+                                  ],
+                                )
+                                : Text("เข้าสู่ระบบ"),
+                      ),
                     ),
                   ],
                 ),
@@ -194,63 +274,76 @@ class _LoginFormState extends State<_LoginForm> {
             ),
           ),
           Text("หรือ", style: Theme.of(context).textTheme.bodyMedium),
-          // Firebase Google & Facebook LoginButton //
-          _SignInButton(
-            title: "เข้าสู่ระบบด้วย Google",
-            titleColor: Colors.black,
-            backgroundColor: Colors.white,
-            onSignIn: () {
-              _authServices.signInWithGoogle();
-            },
-          ),
-          _SignInButton(
-            title: "เข้าสู่ระบบด้วย Apple",
-            titleColor: Colors.white,
-            backgroundColor: Colors.black,
-            onSignIn: () {},
-          ),
-          _SignInButton(
-            title: "เข้าสู่ระบบด้วย Facebook",
-            titleColor: Colors.white,
-            backgroundColor: Colors.lightBlue,
-            onSignIn: () {},
+          // Google Sign in Button
+          ElevatedButton(
+            onPressed:
+                _isSigningInWithGoogle
+                    ? null
+                    : () async {
+                      setState(() {
+                        _isSigningInWithGoogle = true;
+                      });
+                      final String? errorMessage =
+                          await _authServices.signInWithGoogle();
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      if (errorMessage != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              errorMessage,
+                              textAlign: TextAlign.center,
+                            ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                      } else {
+                        // TODO: Navigate to Home Screen
+                        SnackBar(
+                          content: Text(
+                            "เข้าสู่ระบบด้วย Google สำเร็จ",
+                            textAlign: TextAlign.center,
+                          ),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                        );
+                      }
+                      setState(() {
+                        _isSigningInWithGoogle = false;
+                      });
+                    },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child:
+                  _isSigningInWithGoogle
+                      ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                          Text("กำลังเข้าสู่ระบบ..."),
+                        ],
+                      )
+                      : Row(
+                        children: [
+                          Icon(Icons.g_mobiledata_rounded, size: 30),
+                          SizedBox(width: 10),
+                          Text(
+                            "เข้าสู่ระบบด้วย Google",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
+            ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SignInButton extends StatelessWidget {
-  const _SignInButton({
-    required String title,
-    required Color titleColor,
-    required Color backgroundColor,
-    required void Function() onSignIn,
-  }) : _title = title,
-       _titleColor = titleColor,
-       _backgroundColor = backgroundColor,
-       _onSignIn = onSignIn;
-
-  final String _title;
-  final Color _titleColor;
-  final Color _backgroundColor;
-  final void Function() _onSignIn;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: _onSignIn,
-      style: ElevatedButton.styleFrom(backgroundColor: _backgroundColor),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: [
-            Icon(Icons.abc, size: 30),
-            SizedBox(width: 10),
-            Text(_title, style: TextStyle(color: _titleColor)),
-          ],
-        ),
       ),
     );
   }
