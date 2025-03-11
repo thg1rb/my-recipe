@@ -7,8 +7,12 @@ import 'package:my_recipe/screens/bookmark_screen.dart';
 import 'package:my_recipe/screens/home_screen.dart';
 import 'package:my_recipe/screens/profile_screen.dart';
 import 'package:my_recipe/widgets/navigation_bar/bottom_navbar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure that widget binding is initialized before calling Firebase.initializeApp()
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(ProviderScope(child: MyApp()));
 }
 

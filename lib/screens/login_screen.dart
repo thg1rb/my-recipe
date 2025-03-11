@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_recipe/screens/register_screen.dart';
+import 'package:my_recipe/services/auth_services.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -49,6 +50,8 @@ class _LoginFormState extends State<_LoginForm> {
 
   // Obsecured the Passwords: (Default) invisible passwords
   bool _isObsecureText = true;
+
+  final AuthServices _authServices = AuthServices();
 
   @override
   void dispose() {
@@ -177,7 +180,10 @@ class _LoginFormState extends State<_LoginForm> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          print("Login Sucessfully!");
+                          AuthServices().signInWithManual(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
                         }
                       },
                       child: Text("เข้าสู่ระบบ"),
@@ -189,7 +195,62 @@ class _LoginFormState extends State<_LoginForm> {
           ),
           Text("หรือ", style: Theme.of(context).textTheme.bodyMedium),
           // Firebase Google & Facebook LoginButton //
+          _SignInButton(
+            title: "เข้าสู่ระบบด้วย Google",
+            titleColor: Colors.black,
+            backgroundColor: Colors.white,
+            onSignIn: () {
+              _authServices.signInWithGoogle();
+            },
+          ),
+          _SignInButton(
+            title: "เข้าสู่ระบบด้วย Apple",
+            titleColor: Colors.white,
+            backgroundColor: Colors.black,
+            onSignIn: () {},
+          ),
+          _SignInButton(
+            title: "เข้าสู่ระบบด้วย Facebook",
+            titleColor: Colors.white,
+            backgroundColor: Colors.lightBlue,
+            onSignIn: () {},
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _SignInButton extends StatelessWidget {
+  const _SignInButton({
+    required String title,
+    required Color titleColor,
+    required Color backgroundColor,
+    required void Function() onSignIn,
+  }) : _title = title,
+       _titleColor = titleColor,
+       _backgroundColor = backgroundColor,
+       _onSignIn = onSignIn;
+
+  final String _title;
+  final Color _titleColor;
+  final Color _backgroundColor;
+  final void Function() _onSignIn;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: _onSignIn,
+      style: ElevatedButton.styleFrom(backgroundColor: _backgroundColor),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            Icon(Icons.abc, size: 30),
+            SizedBox(width: 10),
+            Text(_title, style: TextStyle(color: _titleColor)),
+          ],
+        ),
       ),
     );
   }
