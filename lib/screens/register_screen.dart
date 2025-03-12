@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_recipe/services/auth_services.dart';
+import 'package:my_recipe/services/auth_service.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -50,6 +50,7 @@ class _RegisterFormState extends State<_RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // TextFormField Controllers
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -71,6 +72,7 @@ class _RegisterFormState extends State<_RegisterForm> {
   @override
   void dispose() {
     // Remove the controllers from memory if not use anymore.
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -92,6 +94,35 @@ class _RegisterFormState extends State<_RegisterForm> {
             child: Wrap(
               runSpacing: 10,
               children: <Widget>[
+                TextFormField(
+                  controller: _usernameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "กรุณาระบุชื่อผู้ใช้งาน";
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
+                  decoration: InputDecoration(
+                    hintText: "ชื่อผู้ใช้งาน",
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none,
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        width: 3,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    prefixIcon: Icon(Icons.person_2_rounded),
+                  ),
+                ),
                 TextFormField(
                   controller: _emailController,
                   validator: (value) {
@@ -281,6 +312,7 @@ class _RegisterFormState extends State<_RegisterForm> {
 
                                     final String? errorMessage =
                                         await _authServices.registerWithManual(
+                                          _usernameController.text,
                                           _emailController.text,
                                           _passwordController.text,
                                         );
@@ -322,6 +354,10 @@ class _RegisterFormState extends State<_RegisterForm> {
                                               ).colorScheme.onPrimary,
                                         ),
                                       );
+                                      _usernameController.clear();
+                                      _emailController.clear();
+                                      _passwordController.clear();
+                                      _confirmPasswordController.clear();
                                       Navigator.pop(context);
                                     }
                                   }

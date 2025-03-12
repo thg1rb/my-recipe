@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_recipe/services/user_service.dart';
 
 class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -26,6 +27,7 @@ class AuthServices {
 
   // Register Manually Way
   Future<String?> registerWithManual(
+    String username,
     String emailAddress,
     String password,
   ) async {
@@ -34,8 +36,14 @@ class AuthServices {
         email: emailAddress,
         password: password,
       );
-      print(credential.user?.uid);
-      return null; // No error
+      // Create a new user in Firestore
+      final UserService _userService = UserService();
+      await _userService.createUser(
+        userId: credential.user!.uid,
+        username: username,
+        profileUrl: "", // TODO: Insert the default profile URL here
+      );
+      return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
         return "✉️ อีเมลล์นี้ถูกใช้งานแล้ว";
@@ -67,7 +75,27 @@ class AuthServices {
         credential,
       );
       print("Google Sign-In successful: ${userCredential.user?.uid}");
-      return null; // No error
+
+      final UserService _userService = UserService();
+      final userSnapshot =
+          await _userService.getUserById(userCredential.user!.uid).first;
+      // Check if the user already exists in Firestore
+      // User does not exist, create a new document otherwise do nothing
+      if (userSnapshot == null) {
+        await _userService.createUser(
+          userId: userCredential.user!.uid,
+          username:
+              googleUser.displayName?.split(' ')[0] ??
+              "User", // Use Google display name as username
+          profileUrl:
+              // TODO: Insert the default profile URL here
+              googleUser.photoUrl ?? "", // Use Google photo URL as profile URL
+        );
+        print("New user created in Firestore.");
+      } else {
+        print("User already exists in Firestore.");
+      }
+      return null;
     } on FirebaseAuthException catch (e) {
       return "❌ การเข้าสู่ระบบด้วย Google ไม่สำเร็จ: $e";
     } catch (e) {

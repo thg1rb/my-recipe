@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_recipe/screens/register_screen.dart';
-import 'package:my_recipe/services/auth_services.dart';
+import 'package:my_recipe/services/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

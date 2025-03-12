@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_recipe/providers/bottom_navbar_provider.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
 import 'package:my_recipe/screens/premium_ad_screen.dart';
-import 'package:my_recipe/services/auth_services.dart';
+import 'package:my_recipe/services/auth_service.dart';
+import 'package:my_recipe/services/user_service.dart';
 
 final Size buttonFixedSize = Size.fromWidth(190);
 
@@ -19,56 +23,68 @@ class ProfileScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _ProfileHeader(username: "kkerdsiri_", email: "kerdsirija@gmail.com"),
-          _ProfileServices(),
-          _ProfileSetting(),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
-            onPressed: () async {
-              // Sign Out and Navigate to Login Screen
-              final String? errorMessage = await _authServices.signOut();
-              ScaffoldMessenger.of(context).clearSnackBars();
-              if (errorMessage != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      errorMessage,
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center,
+          Consumer(
+            builder: (context, ref, child) {
+              return Column(
+                children: <Widget>[
+                  _ProfileHeader(),
+                  _ProfileServices(),
+                  _ProfileSetting(),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
+                    onPressed: () async {
+                      // Sign Out and Navigate to Login Screen
+                      final String? errorMessage =
+                          await _authServices.signOut();
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      if (errorMessage != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              errorMessage,
+                              style: TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                        return;
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "👋 ออกจากระบบสำเร็จ",
+                              style: TextStyle(color: Colors.black),
+                              textAlign: TextAlign.center,
+                            ),
+                            backgroundColor: Colors.white,
+                          ),
+                        );
+                        // Reset the Bottom Navbar Index to the Home Screen
+                        ref.read(bottomNavbarIndexProvider.notifier).state = 0;
+                        // Remove all the previous routes from the stack
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/',
+                          (route) => false,
+                        );
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Icon(
+                          Icons.logout_rounded,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        Text("ออกจากระบบ"),
+                      ],
                     ),
-                    backgroundColor: Theme.of(context).colorScheme.error,
                   ),
-                );
-                return;
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "👋 ออกจากระบบสำเร็จ",
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    ),
-                    backgroundColor: Colors.white,
-                  ),
-                );
-                // Remove all the previous routes from the stack
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/',
-                  (route) => false,
-                );
-              }
+                ],
+              );
             },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Icon(
-                  Icons.logout_rounded,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-                Text("ออกจากระบบ"),
-              ],
-            ),
           ),
         ],
       ),
@@ -78,54 +94,79 @@ class ProfileScreen extends StatelessWidget {
 
 // Profile Header
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({required String username, required String email})
-    : _username = username,
-      _email = email;
+  _ProfileHeader();
 
-  final String _username;
-  final String _email;
+  final UserService _userService = UserService();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        // Image.network(src)
-        ClipOval(
-          child: Image.asset(
-            "assets/images/default-profile.jpg",
-            width: 100,
-            fit: BoxFit.cover,
-          ),
-        ),
-        Text(_username, style: Theme.of(context).textTheme.headlineLarge),
-        Text(_email, style: Theme.of(context).textTheme.bodySmall),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
-          child: Text("แก้ไขข้อมูล"),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            fixedSize: buttonFixedSize,
-            backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            foregroundColor: Theme.of(context).colorScheme.primary,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PremiumAdScreen()),
-            );
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String userId = user?.uid ?? '';
+    final String email = user?.email ?? 'No Email';
+
+    return StreamBuilder<DocumentSnapshot?>(
+      stream: _userService.getUserById(userId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData || !snapshot.data!.exists) {
+          return Text('User not found');
+        } else {
+          final userData = snapshot.data!.data() as Map<String, dynamic>;
+          final String username = userData['username'] ?? 'No Username';
+          final String profileUrl = userData['profileUrl'] ?? '';
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.stars_rounded),
-              Text("สมัครพรีเมียม"),
+              ClipOval(
+                child:
+                    profileUrl.isNotEmpty
+                        ? Image.network(
+                          profileUrl,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                        : Image.asset(
+                          "assets/images/default-profile.jpg",
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+              ),
+              Text(username, style: Theme.of(context).textTheme.headlineLarge),
+              Text(email, style: Theme.of(context).textTheme.bodySmall),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
+                child: Text("แก้ไขข้อมูล"),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  fixedSize: buttonFixedSize,
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  foregroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PremiumAdScreen()),
+                  );
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(Icons.stars_rounded),
+                    Text("สมัครพรีเมียม"),
+                  ],
+                ),
+              ),
             ],
-          ),
-        ),
-      ],
+          );
+        }
+      },
     );
   }
 }
