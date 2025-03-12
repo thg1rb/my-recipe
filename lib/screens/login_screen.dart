@@ -185,7 +185,7 @@ class _LoginFormState extends State<_LoginForm> {
                     SizedBox(
                       width: 230,
                       child: ElevatedButton(
-                        onPressed:
+                        onPressed: // Disable button if signing in (Prevent multiple requests)
                             _isSigningIn
                                 ? null
                                 : () async {
@@ -223,7 +223,6 @@ class _LoginFormState extends State<_LoginForm> {
                                       // Clear Controllers
                                       _emailController.clear();
                                       _passwordController.clear();
-
                                       // Show SnackBar
                                       ScaffoldMessenger.of(
                                         context,
@@ -242,11 +241,13 @@ class _LoginFormState extends State<_LoginForm> {
                                               ).colorScheme.onPrimary,
                                         ),
                                       );
+                                      // Navigate to Home Screen
+                                      Navigator.pushNamed(context, "/home");
                                     }
                                   }
                                 },
                         child:
-                            _isSigningIn
+                            _isSigningIn // Show loading indicator if signing in
                                 ? Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -278,7 +279,7 @@ class _LoginFormState extends State<_LoginForm> {
           ElevatedButton(
             onPressed:
                 _isSigningInWithGoogle
-                    ? null
+                    ? null // Disable button if signing in (Prevent multiple requests)
                     : () async {
                       setState(() {
                         _isSigningInWithGoogle = true;
@@ -298,15 +299,19 @@ class _LoginFormState extends State<_LoginForm> {
                           ),
                         );
                       } else {
-                        // TODO: Navigate to Home Screen
-                        SnackBar(
-                          content: Text(
-                            "เข้าสู่ระบบด้วย Google สำเร็จ",
-                            textAlign: TextAlign.center,
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "✅ เข้าสู่ระบบด้วย Google สำเร็จ",
+                              style: TextStyle(color: Colors.black),
+                              textAlign: TextAlign.center,
+                            ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
                           ),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
                         );
+                        // Navigate to Home Screen
+                        Navigator.pushNamed(context, "/home");
                       }
                       setState(() {
                         _isSigningInWithGoogle = false;
@@ -316,7 +321,7 @@ class _LoginFormState extends State<_LoginForm> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child:
-                  _isSigningInWithGoogle
+                  _isSigningInWithGoogle // Show loading indicator if signing in
                       ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

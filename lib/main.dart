@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/theme.dart';
-import 'package:my_recipe/providers/bottom_navbar_provider.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
-import 'package:my_recipe/screens/bookmark_screen.dart';
-import 'package:my_recipe/screens/home_screen.dart';
-import 'package:my_recipe/screens/profile_screen.dart';
-import 'package:my_recipe/widgets/navigation_bar/bottom_navbar.dart';
+import 'package:my_recipe/screens/login_screen.dart';
+import 'package:my_recipe/screens/main_screen.dart';
+import 'package:my_recipe/screens/premium_ad_screen.dart';
+import 'package:my_recipe/screens/register_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -17,35 +16,23 @@ void main() async {
 }
 
 class MyApp extends ConsumerWidget {
-  MyApp({super.key});
-
-  final List<Widget> bottomNavbarScreens = <Widget>[
-    HomeScreen(),
-    BookmarkScreen(),
-    ProfileScreen(),
-  ];
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    int bottomNavbarIndex = ref.watch(bottomNavbarIndexProvider);
     return MaterialApp(
       title: 'MyRecipe! ',
       theme:
           ref.watch(isDarkTheme)
               ? CustomTheme.darkTheme
               : CustomTheme.lightTheme,
-      home: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: bottomNavbarScreens[bottomNavbarIndex],
-        ),
-        bottomNavigationBar: BottomNavbar(
-          index: bottomNavbarIndex,
-          onChangeIndex:
-              (index) =>
-                  ref.read(bottomNavbarIndexProvider.notifier).state = index,
-        ),
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+        '/home': (context) => MainScreen(),
+        '/premium-ad': (context) => PremiumAdScreen(),
+      },
     );
   }
 }

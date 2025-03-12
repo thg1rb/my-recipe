@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
 import 'package:my_recipe/screens/premium_ad_screen.dart';
+import 'package:my_recipe/services/auth_services.dart';
 
 final Size buttonFixedSize = Size.fromWidth(190);
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  ProfileScreen({super.key});
+
+  final AuthServices _authServices = AuthServices();
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +23,42 @@ class ProfileScreen extends StatelessWidget {
           _ProfileServices(),
           _ProfileSetting(),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              fixedSize: buttonFixedSize,
-            ),
-            onPressed: () {},
+            style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
+            onPressed: () async {
+              // Sign Out and Navigate to Login Screen
+              final String? errorMessage = await _authServices.signOut();
+              ScaffoldMessenger.of(context).clearSnackBars();
+              if (errorMessage != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      errorMessage,
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                  ),
+                );
+                return;
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "👋 ออกจากระบบสำเร็จ",
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    ),
+                    backgroundColor: Colors.white,
+                  ),
+                );
+                // Remove all the previous routes from the stack
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/',
+                  (route) => false,
+                );
+              }
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -67,9 +102,7 @@ class _ProfileHeader extends StatelessWidget {
         Text(_email, style: Theme.of(context).textTheme.bodySmall),
         ElevatedButton(
           onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            fixedSize: buttonFixedSize,
-          ),
+          style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
           child: Text("แก้ไขข้อมูล"),
         ),
         ElevatedButton(

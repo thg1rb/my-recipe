@@ -38,7 +38,7 @@ class AuthServices {
       return null; // No error
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
-        return "🔒 อีเมลล์นี้ถูกใช้งานแล้ว";
+        return "✉️ อีเมลล์นี้ถูกใช้งานแล้ว";
       } else if (e.code == "weak-password") {
         return "🔒 รหัสผ่านไม่แข็งแรงพอ";
       } else {
@@ -75,9 +75,25 @@ class AuthServices {
     }
   }
 
-  // Sign out Google
-  Future<void> signOutGoogle() async {
-    await GoogleSignIn().signOut();
-    print("Google Sign-Out successful");
+  String? getSignInProvider() {
+    final user = _auth.currentUser;
+    if (user != null && user.providerData.isNotEmpty) {
+      return user.providerData[0].providerId;
+    }
+    return null;
+  }
+
+  // Sign Out
+  Future<String?> signOut() async {
+    try {
+      final providerId = getSignInProvider();
+      if (providerId == "google.com") {
+        await GoogleSignIn().signOut();
+      }
+      await _auth.signOut();
+      return null;
+    } catch (e) {
+      return "❌ ออกจากระบบไม่สำเร็จ: $e";
+    }
   }
 }

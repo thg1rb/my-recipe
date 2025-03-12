@@ -264,7 +264,8 @@ class _RegisterFormState extends State<_RegisterForm> {
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            "กรุณายอมรับข้อกำหนดการใช้บริการ",
+                                            "🖋️ กรุณายอมรับข้อกำหนดการใช้บริการ",
+                                            textAlign: TextAlign.center,
                                           ),
                                           backgroundColor:
                                               Theme.of(
@@ -293,7 +294,10 @@ class _RegisterFormState extends State<_RegisterForm> {
                                         context,
                                       ).showSnackBar(
                                         SnackBar(
-                                          content: Text(errorMessage),
+                                          content: Text(
+                                            errorMessage,
+                                            textAlign: TextAlign.center,
+                                          ),
                                           backgroundColor:
                                               Theme.of(
                                                 context,
@@ -301,14 +305,24 @@ class _RegisterFormState extends State<_RegisterForm> {
                                         ),
                                       );
                                     } else {
-                                      Navigator.pop(context);
-                                      SnackBar(
-                                        content: Text("ลงทะเบียนสำเร็จ"),
-                                        backgroundColor:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            "✅ ลงทะเบียนสำเร็จ เข้าสู่ระบบเพื่อใช้งานได้ทันที",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          backgroundColor:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onPrimary,
+                                        ),
                                       );
+                                      Navigator.pop(context);
                                     }
                                   }
                                 },
