@@ -27,16 +27,30 @@ class RecipeScreen extends ConsumerWidget {
           children: [
             Stack(
               children: [
-                Container(
-                  height: 230,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(recipe["imageUrl"]),
-                      fit: BoxFit.cover,
+                recipe["imageUrl"].toString().isEmpty
+                    ? Container(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      height: 230,
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          "ไม่พบรูปภาพ",
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    )
+                    : Container(
+                      height: 230,
+                      width: double.infinity,
+                      child: Image.network(
+                        recipe["imageUrl"],
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(
                     top: 160,
@@ -63,7 +77,7 @@ class RecipeScreen extends ConsumerWidget {
                           child: Column(
                             children: [
                               Text(
-                                recipe["title"],
+                                recipe["name"],
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -106,7 +120,7 @@ class RecipeScreen extends ConsumerWidget {
                                   ),
                                   _buildIconText(
                                     icon: Icons.remove_red_eye,
-                                    text: '12345',
+                                    text: recipe["views"].toString(),
                                   ),
                                   _buildIconText(
                                     icon: Icons.favorite,

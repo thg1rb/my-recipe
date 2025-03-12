@@ -28,12 +28,30 @@ class RecipeCard extends StatelessWidget {
                 padding: EdgeInsets.all(5),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    recipe["imageUrl"],
-                    width: double.infinity,
-                    height: 90,
-                    fit: BoxFit.cover,
-                  ),
+                  child:
+                      recipe["imageUrl"].toString().isEmpty
+                          ? Container(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            width: double.infinity,
+                            height: 90,
+                            child: Center(
+                              child: Text(
+                                "ไม่พบรูปภาพ",
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                              ),
+                            ),
+                          )
+                          : Image.network(
+                            recipe["imageUrl"],
+                            width: double.infinity,
+                            height: 90,
+                            fit: BoxFit.cover,
+                          ),
                 ),
               ),
               Expanded(
@@ -42,7 +60,7 @@ class RecipeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      recipe["title"],
+                      recipe["name"],
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Row(

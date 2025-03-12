@@ -22,14 +22,9 @@ class Detail extends ConsumerWidget {
             if (detailBarIdx == 0)
               Text(recipe["description"])
             else if (detailBarIdx == 1)
-              ListView(
-                children: [
-                  for (int i = 0; i < recipe["ingredients"].length; i++)
-                    Text(recipe["ingredients"][i]),
-                ],
-              )
+              Text(recipe["ingredient"])
             else if (detailBarIdx == 2)
-              Text(recipe["instructions"]),
+              Text(recipe["instruction"]),
           ],
         ),
       ),

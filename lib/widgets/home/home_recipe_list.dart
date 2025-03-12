@@ -1,104 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_recipe/screens/recipe_grid_screen.dart';
+import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/widgets/recipe_card.dart';
 
-final List<Map<String, dynamic>> recipeList = <Map<String, dynamic>>[
-  {
-    "title": "กะเพราหมูเด้ง",
-    "likes": 1234,
-    "category": "ข้าวผัด",
-    "difficulty": "ง่าย",
-    "imageUrl": "assets/images/pad_kra_pao.png",
-    "description":
-        "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
-    "ingredients": [
-      "เนื้อหทูเด้ง 100 กรัม",
-      "เนื้อหมูสับ 50 กรัม",
-      "ใบกะเพรา 20 กรัม",
-      "ข้าวเปล่า 4 ทัพพี",
-      "ไข่ 1 ฟอง",
-    ],
-    "instructions":
-        "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ ",
-  },
-  {
-    "title": "กะเพราหมูเด้ง",
-    "likes": 1234,
-    "category": "ข้าวผัด",
-    "difficulty": "ง่าย",
-    "imageUrl": "assets/images/pad_kra_pao.png",
-    "description":
-        "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
-    "ingredients": [
-      "เนื้อหทูเด้ง 100 กรัม",
-      "เนื้อหมูสับ 50 กรัม",
-      "ใบกะเพรา 20 กรัม",
-      "ข้าวเปล่า 4 ทัพพี",
-      "ไข่ 1 ฟอง",
-    ],
-    "instructions":
-        "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ ",
-  },
-  {
-    "title": "กะเพราหมูเด้ง",
-    "likes": 1234,
-    "category": "ข้าวผัด",
-    "difficulty": "ง่าย",
-    "imageUrl": "assets/images/pad_kra_pao.png",
-    "description":
-        "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
-    "ingredients": [
-      "เนื้อหทูเด้ง 100 กรัม",
-      "เนื้อหมูสับ 50 กรัม",
-      "ใบกะเพรา 20 กรัม",
-      "ข้าวเปล่า 4 ทัพพี",
-      "ไข่ 1 ฟอง",
-    ],
-    "instructions":
-        "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ ",
-  },
-  {
-    "title": "กะเพราหมูเด้ง",
-    "likes": 1234,
-    "category": "ข้าวผัด",
-    "difficulty": "ง่าย",
-    "imageUrl": "assets/images/pad_kra_pao.png",
-    "description":
-        "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
-    "ingredients": [
-      "เนื้อหทูเด้ง 100 กรัม",
-      "เนื้อหมูสับ 50 กรัม",
-      "ใบกะเพรา 20 กรัม",
-      "ข้าวเปล่า 4 ทัพพี",
-      "ไข่ 1 ฟอง",
-    ],
-    "instructions":
-        "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ ",
-  },
-  {
-    "title": "กะเพราหมูเด้ง",
-    "likes": 1234,
-    "category": "ข้าวผัด",
-    "difficulty": "ง่าย",
-    "imageUrl": "assets/images/pad_kra_pao.png",
-    "description":
-        "กะเพราที่ถูกรังสรรค์เพื่อคนชอบหมูเด้ง เป็นชีวิตจิตใจ ทำมาจาก เนื้อฮิปโปผสมเนื้อหมูสับ",
-    "ingredients": [
-      "เนื้อหทูเด้ง 100 กรัม",
-      "เนื้อหมูสับ 50 กรัม",
-      "ใบกะเพรา 20 กรัม",
-      "ข้าวเปล่า 4 ทัพพี",
-      "ไข่ 1 ฟอง",
-    ],
-    "instructions":
-        "1. เทน้ำมัน \n2.เทข้าว \n3.ใส่เนื้อกับใบกะเพราแล้วผัดๆๆๆๆงั่มๆ ",
-  },
-];
-
 class HomeRecipeList extends StatelessWidget {
-  const HomeRecipeList({super.key, required String title}) : _title = title;
+  HomeRecipeList({super.key, required String title}) : _title = title;
 
   final String _title;
+  final RecipeService _recipeService = RecipeService();
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +24,7 @@ class HomeRecipeList extends StatelessWidget {
                   () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder:
-                          (context) => RecipeGridScreen(
-                            recipeList: recipeList,
-                            title: _title,
-                          ),
+                      builder: (context) => RecipeGridScreen(title: _title),
                     ),
                   ),
               child: Row(
@@ -141,13 +47,30 @@ class HomeRecipeList extends StatelessWidget {
         ),
         SizedBox(
           height: 200,
-          child: ListView.separated(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: recipeList.length,
-            separatorBuilder: (context, index) => SizedBox(width: 6),
-            itemBuilder:
-                (context, index) => RecipeCard(recipe: recipeList[index]),
+          child: StreamBuilder<QuerySnapshot>(
+            stream: _recipeService.getRecipes(keyword: ''),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(child: Text('No data'));
+              } else {
+                final recipeList =
+                    snapshot.data!.docs.map((recipe) => recipe.data()).toList();
+                return ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: recipeList.length,
+                  separatorBuilder: (context, index) => SizedBox(width: 6),
+                  itemBuilder:
+                      (context, index) => RecipeCard(
+                        recipe: recipeList[index] as Map<String, dynamic>,
+                      ),
+                );
+              }
+            },
           ),
         ),
       ],
