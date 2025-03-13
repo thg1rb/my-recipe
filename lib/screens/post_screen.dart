@@ -32,6 +32,8 @@ class _PostScreenState extends State<PostScreen> {
   final UserService _userService = UserService();
   final RecipeService _recipeService = RecipeService();
 
+  bool _isPosting = false;
+
   void handleImageSelected(File? file) {
     setState(() {
       image = file;
@@ -208,59 +210,112 @@ class _PostScreenState extends State<PostScreen> {
                       },
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate() &&
-                            image != null &&
-                            category != null &&
-                            difficulty != null) {
-                          // Debugging
-                          // print("Recipe Name: ${nameController.text}");
-                          // print("Details: ${detailController.text}");
-                          // print("Ingredients: ${ingredientsController.text}");
-                          // print("Instructions: ${instructionController.text}");
-                          // print("Category: $category");
-                          // print("Difficulty: $difficulty");
-                          // print("Image Path: ${image?.path}");
-                          // print("Video Path: ${video?.path}");
-                          _recipeService.addRecipe(
-                            userId: _user.uid,
-                            name: nameController.text,
-                            category: category!,
-                            difficulty: difficulty!,
-                            description: detailController.text,
-                            ingredient: ingredientsController.text,
-                            instruction: instructionController.text,
-                            imageFile: image,
-                            videoFile: video,
-                          );
-                        } else {
-                          if (image == null) {
-                            setState(() {
-                              imageErrorMessage = 'กรุณาเลือกรูปภาพ';
-                            });
-                          }
-                          if (category == null) {
-                            setState(() {
-                              categoryErrorMessage = 'กรุณาเลือกประเภทอาหาร';
-                            });
-                          }
-                          if (difficulty == null) {
-                            setState(() {
-                              difficultyErrorMessage = 'กรุณาเลือกระดับความยาก';
-                            });
-                          }
-                        }
-                        //
-                      },
+                      onPressed:
+                          _isPosting
+                              ? null
+                              : () {
+                                if (_formKey.currentState!.validate() &&
+                                    image != null &&
+                                    category != null &&
+                                    difficulty != null) {
+                                  // Debugging
+                                  // print("Recipe Name: ${nameController.text}");
+                                  // print("Details: ${detailController.text}");
+                                  // print("Ingredients: ${ingredientsController.text}");
+                                  // print("Instructions: ${instructionController.text}");
+                                  // print("Category: $category");
+                                  // print("Difficulty: $difficulty");
+                                  // print("Image Path: ${image?.path}");
+                                  // print("Video Path: ${video?.path}");
+                                  setState(() {
+                                    _isPosting = true;
+                                  });
+                                  _recipeService.addRecipe(
+                                    userId: _user.uid,
+                                    name: nameController.text,
+                                    category: category!,
+                                    difficulty: difficulty!,
+                                    description: detailController.text,
+                                    ingredient: ingredientsController.text,
+                                    instruction: instructionController.text,
+                                    imageFile: image,
+                                    videoFile: video,
+                                  );
+                                  setState(() {
+                                    _isPosting = false;
+                                  });
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).clearSnackBars();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        "✅ เผยแพร่สูตรอาหารสำเร็จ",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      backgroundColor:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary,
+                                    ),
+                                  );
+                                } else {
+                                  if (image == null) {
+                                    setState(() {
+                                      imageErrorMessage = 'กรุณาเลือกรูปภาพ';
+                                    });
+                                  }
+                                  if (category == null) {
+                                    setState(() {
+                                      categoryErrorMessage =
+                                          'กรุณาเลือกประเภทอาหาร';
+                                    });
+                                  }
+                                  if (difficulty == null) {
+                                    setState(() {
+                                      difficultyErrorMessage =
+                                          'กรุณาเลือกระดับความยาก';
+                                    });
+                                  }
+                                }
+                                //
+                              },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      child: Text(
-                        'เผยแพร่สูตรอาหาร',
-                        style: TextStyle(fontSize: 20),
-                      ),
+                      child:
+                          _isPosting
+                              ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 3,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary,
+                                    ),
+                                  ),
+                                  Text("กำลังเผยแพร่สูตร..."),
+                                ],
+                              )
+                              : Text(
+                                'เผยแพร่สูตรอาหาร',
+                                style: TextStyle(fontSize: 20),
+                              ),
                     ),
                   ],
                 ),
