@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/services/user_service.dart';
 import 'package:my_recipe/widgets/post/form.dart';
 import 'package:my_recipe/widgets/post/upload.dart';
@@ -29,6 +30,7 @@ class _PostScreenState extends State<PostScreen> {
 
   final User _user = FirebaseAuth.instance.currentUser!;
   final UserService _userService = UserService();
+  final RecipeService _recipeService = RecipeService();
 
   void handleImageSelected(File? file) {
     setState(() {
@@ -206,30 +208,30 @@ class _PostScreenState extends State<PostScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // HOW TO USE
-                        /*
-                          nameController.text -> name value
-                          detailController.text -> detailValue
-                          ingredientsController.text -> ingredients value
-                          instructionsController.text -> instruction value
-                          image use ได้เลย (File / XFile ไม่แน่ใจ)
-                          video use ได้เลย (File / XFile ไม่แน่ใจ)
-                          category use ได้เลย
-                          difficulty use ได้เลย
-                         */
-                        // DEBUG
                         if (_formKey.currentState!.validate() &&
                             image != null &&
                             category != null &&
                             difficulty != null) {
-                          print("Recipe Name: ${nameController.text}");
-                          print("Details: ${detailController.text}");
-                          print("Ingredients: ${ingredientsController.text}");
-                          print("Instructions: ${instructionController.text}");
-                          print("Category: $category");
-                          print("Difficulty: $difficulty");
-                          print("Image Path: ${image?.path}");
-                          print("Video Path: ${video?.path}");
+                          // Debugging
+                          // print("Recipe Name: ${nameController.text}");
+                          // print("Details: ${detailController.text}");
+                          // print("Ingredients: ${ingredientsController.text}");
+                          // print("Instructions: ${instructionController.text}");
+                          // print("Category: $category");
+                          // print("Difficulty: $difficulty");
+                          // print("Image Path: ${image?.path}");
+                          // print("Video Path: ${video?.path}");
+                          _recipeService.addRecipe(
+                            userId: _user.uid,
+                            name: nameController.text,
+                            category: category!,
+                            difficulty: difficulty!,
+                            description: detailController.text,
+                            ingredient: ingredientsController.text,
+                            instruction: instructionController.text,
+                            imageFile: image,
+                            videoFile: video,
+                          );
                         } else {
                           if (image == null) {
                             setState(() {
