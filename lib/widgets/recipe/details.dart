@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_recipe/models/food_recipe.dart';
 import 'package:my_recipe/providers/details_bar_provider.dart';
 
 class Detail extends ConsumerWidget {
   const Detail({super.key, required this.recipe});
-  final FoodRecipe recipe;
+  final Map<String, dynamic> recipe;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int detailBarIdx = ref.watch(detailsBarProvider);
@@ -20,16 +19,15 @@ class Detail extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            if (detailBarIdx == 0) Text(recipe.description)
-            else if(detailBarIdx == 1) ListView(children: [
-              for (int i=0; i<recipe.ingredients.length;i++)
-                Text(recipe.ingredients[i])
-            ],)
-            else if(detailBarIdx == 2) Text(recipe.instruction)
-          ]  
+            if (detailBarIdx == 0)
+              Text(recipe["description"])
+            else if (detailBarIdx == 1)
+              Text(recipe["ingredient"])
+            else if (detailBarIdx == 2)
+              Text(recipe["instruction"]),
+          ],
         ),
       ),
     );
   }
-
 }

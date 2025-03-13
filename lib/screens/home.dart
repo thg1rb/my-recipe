@@ -1,38 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/widgets/home/home_category_list.dart';
 import 'package:my_recipe/widgets/home/home_recipe_list.dart';
+import 'package:my_recipe/widgets/post_panel.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.transparent),
       floatingActionButton: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(createRoute());
+        },
         icon: Icon(Icons.add_rounded, size: 35),
         style: IconButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 70),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: <Widget>[
-              HomeHeader(username: "kkerdsiri_", profileUrl: ""),
-              HomeSearchBar(),
-              HomeCategoryList(),
-              HomeRecipeList(title: "แนะนำสำหรับคุณ"),
-              HomeRecipeList(title: "Like มากที่สุด"),
-              HomeRecipeList(title: "มีวิดีโอให้ดู"),
-            ],
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: <Widget>[
+                HomeHeader(username: "kkerdsiri_", profileUrl: ""),
+                HomeSearchBar(),
+                HomeCategoryList(),
+                HomeRecipeList(title: "แนะนำสำหรับคุณ"),
+                HomeRecipeList(title: "Like มากที่สุด"),
+                HomeRecipeList(title: "มีวิดีโอให้ดู"),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -123,11 +129,15 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
                 prefixIconColor: Theme.of(context).colorScheme.onSurface,
                 fillColor: Theme.of(context).colorScheme.onPrimary,
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   borderRadius: BorderRadius.circular(30),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),

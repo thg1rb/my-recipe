@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/custom_theme/color_scheme.dart';
-import 'package:my_recipe/models/food_recipe.dart';
 import 'package:my_recipe/widgets/recipe/details.dart';
 import 'package:my_recipe/widgets/recipe/details_bar.dart';
 
 class RecipeScreen extends ConsumerWidget {
   const RecipeScreen({super.key, required this.recipe});
 
-  final FoodRecipe recipe;
+  final Map<String, dynamic> recipe;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,22 +27,36 @@ class RecipeScreen extends ConsumerWidget {
           children: [
             Stack(
               children: [
-                Container(
-                  height: 230,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(recipe.image),
-                      fit: BoxFit.cover,
+                recipe["imageUrl"].toString().isEmpty
+                    ? Container(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      height: 230,
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          "ไม่พบรูปภาพ",
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    )
+                    : Container(
+                      height: 230,
+                      width: double.infinity,
+                      child: Image.network(
+                        recipe["imageUrl"],
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(
                     top: 160,
                     left: 40,
                     right: 40,
-                    bottom: 12
+                    bottom: 12,
                   ),
 
                   child: Column(
@@ -64,7 +77,7 @@ class RecipeScreen extends ConsumerWidget {
                           child: Column(
                             children: [
                               Text(
-                                recipe.title,
+                                recipe["name"],
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -103,15 +116,15 @@ class RecipeScreen extends ConsumerWidget {
                                 children: [
                                   _buildIconText(
                                     icon: Icons.dining,
-                                    text: recipe.difficulty,
+                                    text: recipe["difficulty"],
                                   ),
                                   _buildIconText(
                                     icon: Icons.remove_red_eye,
-                                    text: '12345',
+                                    text: recipe["views"].toString(),
                                   ),
                                   _buildIconText(
                                     icon: Icons.favorite,
-                                    text: recipe.likes.toString(),
+                                    text: recipe["likes"].toString(),
                                   ),
                                 ],
                               ),
@@ -125,7 +138,7 @@ class RecipeScreen extends ConsumerWidget {
               ],
             ),
             DetailsBar(),
-            Detail(recipe: recipe)
+            Detail(recipe: recipe),
           ],
         ),
       ),

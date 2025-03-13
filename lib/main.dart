@@ -1,47 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/theme.dart';
-import 'package:my_recipe/providers/bottom_navbar_provider.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
-import 'package:my_recipe/screens/bookmark.dart';
-import 'package:my_recipe/screens/home.dart';
-import 'package:my_recipe/screens/profile.dart';
-import 'package:my_recipe/widgets/navigation_bar/bottom_navbar.dart';
+import 'package:my_recipe/screens/login_screen.dart';
+import 'package:my_recipe/screens/main_screen.dart';
+import 'package:my_recipe/screens/post_screen.dart';
+import 'package:my_recipe/screens/premium_ad_screen.dart';
+import 'package:my_recipe/screens/register_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure that widget binding is initialized before calling Firebase.initializeApp()
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Supabase.initialize(
+    url: "https://wcqmjwveaoxqjubuoena.supabase.co",
+    anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcW1qd3ZlYW94cWp1YnVvZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3ODMzNzgsImV4cCI6MjA1NzM1OTM3OH0.qYP_P5H9H81yEHddfSa-fLV2vbh3jJwMd5c391W5Ai8",
+  );
   runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
-  MyApp({super.key});
-
-  final List<Widget> bottomNavbarScreens = <Widget>[
-    HomeScreen(),
-    BookmarkScreen(),
-    ProfileScreen(),
-  ];
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    int bottomNavbarIndex = ref.watch(bottomNavbarIndexProvider);
     return MaterialApp(
       title: 'MyRecipe! ',
       theme:
           ref.watch(isDarkTheme)
               ? CustomTheme.darkTheme
               : CustomTheme.lightTheme,
-      home: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: bottomNavbarScreens[bottomNavbarIndex],
-        ),
-        bottomNavigationBar: BottomNavbar(
-          index: bottomNavbarIndex,
-          onChangeIndex:
-              (index) =>
-                  ref.read(bottomNavbarIndexProvider.notifier).state = index,
-        ),
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+        '/home': (context) => MainScreen(),
+        '/premium-ad': (context) => PremiumAdScreen(),
+        '/post': (context) => PostScreen(),
+      },
     );
   }
 }
