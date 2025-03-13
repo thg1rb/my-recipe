@@ -1,13 +1,37 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_recipe/widgets/post/form.dart';
 import 'package:my_recipe/widgets/post/upload.dart';
 
-class PostScreen extends ConsumerWidget {
+class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
+  @override
+  State<PostScreen> createState() => _PostScreenState();
+}
+
+class _PostScreenState extends State<PostScreen> {
+  final nameController = TextEditingController();
+  final detailController = TextEditingController();
+  final ingredientsController = TextEditingController();
+  final instructionController = TextEditingController();
+  File? image;
+  File? video;
+  String? category;
+  String? difficulty;
+
+  void handleImageSelected(File? file) {
+    setState(() => image = file);
+  }
+
+  void handleVideoSelected(File? file) {
+    setState(() => video = file);
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -33,6 +57,8 @@ class PostScreen extends ConsumerWidget {
                     icon: Icons.image,
                     iconSize: 60,
                     isRow: false,
+                    isVideo: false,
+                    onFileSelected: handleImageSelected,
                   ),
                   UploadButton(
                     btnSize: Size(400, 80),
@@ -40,12 +66,19 @@ class PostScreen extends ConsumerWidget {
                     icon: Icons.movie_filter,
                     iconSize: 40,
                     isRow: true,
+                    isVideo: true,
+                    onFileSelected: handleVideoSelected,
                   ),
                   FineDropDownBox(
                     title: 'ประเภทอาหาร',
                     items: ['เมนูข้าว', 'เมนูเส้น', 'ของหวาน'],
                     colors: [Colors.yellow, Colors.yellow, Colors.yellow],
                     id: 'cateDropdown',
+                    onSelected: (value) {
+                      setState(() {
+                        category = value;  
+                      });
+                    },
                   ),
                   FineDropDownBox(
                     title: 'ระดับความยาก',
@@ -56,13 +89,56 @@ class PostScreen extends ConsumerWidget {
                       Colors.redAccent,
                     ],
                     id: 'diffDropDown',
+                    onSelected: (value) {
+                      setState(() {
+                        difficulty = value;
+                      });
+                    },
                   ),
-                  CustomTextField(label: 'ชื่อเมนู', height: 56),
-                  CustomTextField(label: 'รายละเอียด', height: 150),
-                  CustomTextField(label: 'วัตถุดิบที่ใช้', height: 150),
-                  CustomTextField(label: 'ขั้นตอนวิธีทำ', height: 150),
+                  CustomTextField(
+                    label: 'ชื่อเมนู',
+                    height: 56,
+                    controller: nameController,
+                  ),
+                  CustomTextField(
+                    label: 'รายละเอียด',
+                    height: 150,
+                    controller: detailController,
+                  ),
+                  CustomTextField(
+                    label: 'วัตถุดิบที่ใช้',
+                    height: 150,
+                    controller: ingredientsController,
+                  ),
+                  CustomTextField(
+                    label: 'ขั้นตอนวิธีทำ',
+                    height: 150,
+                    controller: instructionController,
+                  ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // HOW TO USE
+                      /*
+                        nameController.text -> name value
+                        detailController.text -> detailValue
+                        ingredientsController.text -> ingredients value
+                        instructionsController.text -> instruction value
+                        image use ได้เลย (File / XFile ไม่แน่ใจ)
+                        video use ได้เลย (File / XFile ไม่แน่ใจ)
+                        category use ได้เลย
+                        difficulty use ได้เลย
+                       */
+                      // DEBUG
+                      print("Recipe Name: ${nameController.text}");
+                      print("Details: ${detailController.text}");
+                      print("Ingredients: ${ingredientsController.text}");
+                      print("Instructions: ${instructionController.text}");
+                      print("Category: $category");
+                      print("Difficulty: $difficulty");
+                      print("Image Path: ${image?.path}");
+                      print("Video Path: ${video?.path}");
+                      //
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -86,7 +162,7 @@ class PostScreen extends ConsumerWidget {
 // Slide Transiton Build
 Route createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const PostScreen(),
+    pageBuilder: (context, animation, secondaryAnimation) => PostScreen(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);
       const end = Offset.zero;

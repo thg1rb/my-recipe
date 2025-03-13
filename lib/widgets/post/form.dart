@@ -1,18 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/custom_theme/color_scheme.dart';
 import 'package:my_recipe/providers/drop_down_state_provider.dart';
 
-class CustomTextField extends ConsumerWidget {
-  const CustomTextField({super.key, required this.label, required this.height});
+class CustomTextField extends StatelessWidget {
+  const CustomTextField({super.key, required this.label, required this.height, required this.controller});
   final String label;
   final double height;
+  final TextEditingController controller;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return SizedBox(
       height: height,
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           label: Text(label),
           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -37,17 +41,21 @@ class FineDropDownBox extends ConsumerStatefulWidget {
     required this.items,
     required this.colors,
     required this.id,
+    required this. onSelected,
   });
+
   final String title;
   final List<String> items;
   final List<Color> colors;
   final String id;
+  final Function(String) onSelected;
 
   @override
   ConsumerState<FineDropDownBox> createState() => _FineDropDownBoxState();
 }
 
 class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
+  String? selectedItem;
   @override
   Widget build(BuildContext context) {
     bool showDropDown = ref.watch(dropDownStateProvider(widget.id));
@@ -70,9 +78,13 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
+                        setState(() {
+                          selectedItem = widget.items[index];
+                        });
                         ref
                             .read(dropDownStateProvider(widget.id).notifier)
                             .state = !showDropDown;
+                        widget.onSelected(widget.items[index]);
                       },
                       child: Container(
                         height: 60,
@@ -115,7 +127,7 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.title, style: TextStyle(fontSize: 24)),
+              Text(selectedItem ?? widget.title, style: TextStyle(fontSize: 24)),
               SizedBox(width: 10),
               Icon(Icons.arrow_drop_down, color: Colors.white, size: 40),
             ],
