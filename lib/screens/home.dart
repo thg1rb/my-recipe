@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/widgets/home/home_category_list.dart';
 import 'package:my_recipe/widgets/home/home_recipe_list.dart';
-import 'package:my_recipe/widgets/post_panel.dart';
+import 'package:my_recipe/screens/post_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
