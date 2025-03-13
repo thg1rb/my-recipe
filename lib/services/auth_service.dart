@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_recipe/services/bookmark_service.dart';
 import 'package:my_recipe/services/user_service.dart';
 
 class AuthServices {
@@ -43,6 +44,12 @@ class AuthServices {
         username: username,
         profileUrl: "", // TODO: Insert the default profile URL here
       );
+      // Create a default bookmark in Firestore
+      final BookmarkService _bookmarkService = BookmarkService();
+      await _bookmarkService.createBookmark(
+        userId: credential.user!.uid,
+        name: "บันทึกเริ่มต้นของฉัน",
+      );
       return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
@@ -80,7 +87,8 @@ class AuthServices {
       final userSnapshot =
           await _userService.getUserById(userCredential.user!.uid).first;
       // Check if the user already exists in Firestore
-      // User does not exist, create a new document otherwise do nothing
+      // User does not exist, create a new document of the user
+      // and a default bookmark otherwise, do nothing
       if (userSnapshot == null) {
         await _userService.createUser(
           userId: userCredential.user!.uid,
@@ -90,6 +98,11 @@ class AuthServices {
           profileUrl:
               // TODO: Insert the default profile URL here
               googleUser.photoUrl ?? "", // Use Google photo URL as profile URL
+        );
+        final BookmarkService _bookmarkService = BookmarkService();
+        await _bookmarkService.createBookmark(
+          userId: userCredential.user!.uid,
+          name: "🍳 บันทึกเริ่มต้นของฉัน",
         );
         print("New user created in Firestore.");
       } else {

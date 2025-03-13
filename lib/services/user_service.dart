@@ -16,7 +16,16 @@ class UserService {
     });
   }
 
+  // READ: Check if premium is not expired
+  Stream<bool> isPremiumUser(String userId) {
+    return _users.doc(userId).snapshots().map((snapshot) {
+      final premiumExpiryDate = snapshot.get('premiumExpiryDate');
+      return DateTime.now().isBefore(premiumExpiryDate.toDate());
+    });
+  }
+
   // CREATE
+  // TODO: Return Future<String?> to detect errors
   Future<void> createUser({
     required String userId,
     required String username,
@@ -34,7 +43,7 @@ class UserService {
     }
   }
 
-  // UPDATE
+  // TODO: UPDATE
 
-  // DELETE
+  // TODO: DELETE
 }

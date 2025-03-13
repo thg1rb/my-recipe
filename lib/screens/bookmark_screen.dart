@@ -1,24 +1,21 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-// Hardcode check premium user
-final bool isPremiumUser = true;
-
-// Bookmarks Mock Object
-final List<Map<String, dynamic>> bookmarks = [
-  {"title": "🍳 บุ๊คมาร์คเริ่มต้น", "count": 10},
-  {"title": "☀ มื้อเช้าแสนสดชื่น", "count": 20},
-  {"title": "🕛 มื้อเที่ยงแสนอร่อย", "count": 20},
-  {"title": "🌆 มื้อเย็นสุขสันต์", "count": 20},
-  {"title": "✨ มื้อดึกแสนเปล่าเปลี่ยว", "count": 20},
-];
+import 'package:my_recipe/screens/premium_ad_screen.dart';
+import 'package:my_recipe/services/bookmark_service.dart';
+import 'package:my_recipe/services/user_service.dart';
 
 class BookmarkScreen extends StatelessWidget {
   BookmarkScreen({super.key});
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _bookmarkTitle = TextEditingController();
+
+  final User user = FirebaseAuth.instance.currentUser!;
+  final UserService _userService = UserService();
+  final BookmarkService _bookmarkService = BookmarkService();
 
   // CREATE and EDIT AlertDialog
   void _showCreateOrEditDialog(BuildContext context) {
@@ -203,72 +200,141 @@ class BookmarkScreen extends StatelessWidget {
             vertical: 20,
             horizontal: 10, // horizontal padding = main.dart (15) + (10) = 25
           ),
-          child: ListView.separated(
-            itemCount: bookmarks.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {},
-                title: Text(
-                  bookmarks[index]["title"],
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                subtitle: Text(
-                  "จำนวน ${bookmarks[index]["count"].toString()} สูตร",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                trailing: PopupMenuButton(
-                  icon: Icon(
-                    Icons.more_vert_rounded,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  itemBuilder:
-                      (context) => [
-                        PopupMenuItem(
-                          onTap: () => _showCreateOrEditDialog(context),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(Icons.edit_rounded),
-                              Text("แก้ไขบันทึก"),
-                            ],
-                          ),
+          child: StreamBuilder<QuerySnapshot>(
+            stream: _bookmarkService.getBookmarks(user.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(
+                  child: Text('No data'),
+                ); // TODO: Styling this message
+              } else {
+                final bookmarks =
+                    snapshot.data!.docs
+                        .map((bookmark) => bookmark.data())
+                        .toList();
+                return ListView.separated(
+                  itemCount: bookmarks.length,
+                  itemBuilder: (context, index) {
+                    final bookmark = bookmarks[index] as Map<String, dynamic>;
+                    return ListTile(
+                      onTap: () {},
+                      title: Text(
+                        bookmark["name"],
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
                         ),
-                        PopupMenuItem(
-                          onTap: () => _showDeleteDialog(context),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(Icons.delete_rounded),
-                              Text("ลบบันทึก"),
-                            ],
-                          ),
+                      ),
+                      subtitle: Text(
+                        "จำนวน ${bookmark["recipesId"].toList().length.toString()} สูตร",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
-                      ],
-                ),
-                tileColor: Theme.of(context).colorScheme.onPrimary,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 4,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(height: 10);
+                      ),
+                      trailing: PopupMenuButton(
+                        icon: Icon(
+                          Icons.more_vert_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        itemBuilder:
+                            (context) => [
+                              PopupMenuItem(
+                                onTap: () => _showCreateOrEditDialog(context),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.edit_rounded),
+                                    Text("แก้ไขบันทึก"),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                onTap: () => _showDeleteDialog(context),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.delete_rounded),
+                                    Text("ลบบันทึก"),
+                                  ],
+                                ),
+                              ),
+                            ],
+                      ),
+                      tileColor: Theme.of(context).colorScheme.onPrimary,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 4,
+                        ),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 10);
+                  },
+                );
+              }
             },
           ),
         ),
         persistentFooterButtons: <Widget>[
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => _showCreateOrEditDialog(context),
-              child: Text("สร้างบันทึกสูตรอาหารใหม่"),
-            ),
+          StreamBuilder<bool>(
+            stream: _userService.isPremiumUser(user.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data! == false) {
+                return SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  PremiumAdScreen(),
+                          transitionsBuilder: (
+                            context,
+                            animation,
+                            secondaryAnimation,
+                            child,
+                          ) {
+                            const begin = Offset(0.0, 1.0);
+                            const end = Offset.zero;
+                            const curve = Curves.ease;
+
+                            var tween = Tween(
+                              begin: begin,
+                              end: end,
+                            ).chain(CurveTween(curve: curve));
+                            var offsetAnimation = animation.drive(tween);
+
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: Text("สร้างบันทึกสูตรอาหารใหม่"),
+                  ),
+                );
+              } else {
+                return SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => _showCreateOrEditDialog(context),
+                    child: Text("สร้างบันทึกสูตรอาหารใหม่"),
+                  ),
+                );
+              }
+            },
           ),
         ],
         persistentFooterAlignment: AlignmentDirectional.bottomCenter,
