@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/theme.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
+import 'package:my_recipe/screens/contact_us_screen.dart';
 import 'package:my_recipe/screens/login_screen.dart';
 import 'package:my_recipe/screens/main_screen.dart';
 import 'package:my_recipe/screens/post_screen.dart';
@@ -40,6 +41,7 @@ class MyApp extends ConsumerWidget {
         '/home': (context) => MainScreen(),
         '/premium-ad': (context) => PremiumAdScreen(),
         '/post': (context) => PostScreen(),
+        '/contact-us': (context) => ContactUs(),
       },
     );
   }

@@ -201,7 +201,9 @@ class _ProfileServices extends StatelessWidget {
                 leading: Icon(Icons.support_agent_rounded),
                 title: Text("บริการ & ความช่วยเหลือ"),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/contact-us");
+                  },
                   icon: Icon(Icons.navigate_next_rounded),
                 ),
               ),

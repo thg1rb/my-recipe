@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_recipe/screens/post_screen.dart';
 import 'package:my_recipe/services/user_service.dart';
 import 'package:my_recipe/widgets/home/home_category_list.dart';
 import 'package:my_recipe/widgets/home/home_recipe_list.dart';
@@ -14,6 +15,7 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: IconButton(
         onPressed: () {
           // TODO: Navigate to Create Recipe Screen
+          Navigator.of(context).push(createRoute());
         },
         icon: Icon(Icons.add_rounded, size: 35),
         style: IconButton.styleFrom(
