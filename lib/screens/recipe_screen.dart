@@ -69,7 +69,7 @@ class RecipeScreen extends ConsumerWidget {
                         width: 350,
                         height: 142,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
                         child: Padding(
@@ -138,6 +138,7 @@ class RecipeScreen extends ConsumerWidget {
               ],
             ),
             DetailsBar(),
+            SizedBox(height: 10,),
             Detail(recipe: recipe),
           ],
         ),

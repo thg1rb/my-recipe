@@ -15,7 +15,7 @@ class DetailsBar extends ConsumerWidget {
       width: 333,
       height: 40,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.onPrimary,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Stack(

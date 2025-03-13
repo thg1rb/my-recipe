@@ -14,7 +14,7 @@ class Detail extends ConsumerWidget {
         padding: EdgeInsets.all(20),
         width: 400,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.onPrimary,
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
         child: Column(
