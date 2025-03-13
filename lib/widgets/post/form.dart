@@ -115,7 +115,7 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('ประเภทอาหาร', style: TextStyle(fontSize: 24)),
+              Text(widget.title, style: TextStyle(fontSize: 24)),
               SizedBox(width: 10),
               Icon(Icons.arrow_drop_down, color: Colors.white, size: 40),
             ],
