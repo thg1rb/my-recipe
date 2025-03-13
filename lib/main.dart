@@ -4,6 +4,7 @@ import 'package:my_recipe/core/theme/theme.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
 import 'package:my_recipe/screens/login_screen.dart';
 import 'package:my_recipe/screens/main_screen.dart';
+import 'package:my_recipe/screens/post_screen.dart';
 import 'package:my_recipe/screens/premium_ad_screen.dart';
 import 'package:my_recipe/screens/register_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -38,6 +39,7 @@ class MyApp extends ConsumerWidget {
         '/register': (context) => RegisterScreen(),
         '/home': (context) => MainScreen(),
         '/premium-ad': (context) => PremiumAdScreen(),
+        '/post': (context) => PostScreen(),
       },
     );
   }
