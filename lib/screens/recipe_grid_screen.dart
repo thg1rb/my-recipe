@@ -14,9 +14,9 @@ class RecipeGridScreen extends StatefulWidget {
 }
 
 class _RecipeGridScreenState extends State<RecipeGridScreen> {
-  String search = '';
-
   final RecipeService _recipeService = RecipeService();
+
+  String search = '';
 
   @override
   Widget build(BuildContext context) {

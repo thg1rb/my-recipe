@@ -1,28 +1,49 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/custom_theme/color_scheme.dart';
 import 'package:my_recipe/providers/drop_down_state_provider.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({super.key, required this.label, required this.height, required this.controller});
+  CustomTextField({
+    super.key,
+    required this.label,
+    required this.height,
+    required this.controller,
+    required this.validator,
+  });
   final String label;
   final double height;
   final TextEditingController controller;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      child: TextField(
+      child: TextFormField(
         controller: controller,
+        validator: validator,
         decoration: InputDecoration(
           label: Text(label),
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          border: OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: CustomColorScheme.yellowColor),
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              width: 3,
+              color: Theme.of(context).colorScheme.error,
+            ),
           ),
         ),
         textAlignVertical: TextAlignVertical.top,
@@ -41,7 +62,7 @@ class FineDropDownBox extends ConsumerStatefulWidget {
     required this.items,
     required this.colors,
     required this.id,
-    required this. onSelected,
+    required this.onSelected,
   });
 
   final String title;
@@ -127,7 +148,10 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(selectedItem ?? widget.title, style: TextStyle(fontSize: 24)),
+              Text(
+                selectedItem ?? widget.title,
+                style: TextStyle(fontSize: 24),
+              ),
               SizedBox(width: 10),
               Icon(Icons.arrow_drop_down, color: Colors.white, size: 40),
             ],

@@ -34,9 +34,10 @@ class _UploadButtonState extends State<UploadButton> {
   Future<void> pickFile() async {
     try {
       final picker = ImagePicker();
-      final pickedFile = widget.isVideo
-          ? await picker.pickVideo(source: ImageSource.gallery)
-          : await picker.pickImage(source: ImageSource.gallery);
+      final pickedFile =
+          widget.isVideo
+              ? await picker.pickVideo(source: ImageSource.gallery)
+              : await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile == null) return;
 
@@ -54,10 +55,18 @@ class _UploadButtonState extends State<UploadButton> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgets = [
-      Icon(widget.icon, color: Theme.of(context).colorScheme.onPrimary, size: widget.iconSize),
+      Icon(
+        widget.icon,
+        color: Theme.of(context).colorScheme.onPrimary,
+        size: widget.iconSize,
+      ),
       Text(
         widget.text,
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.normal, color: Theme.of(context).colorScheme.onPrimary),
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.normal,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
       ),
     ];
 
@@ -70,18 +79,22 @@ class _UploadButtonState extends State<UploadButton> {
         height: widget.btnSize.height,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
-          image: file != null ? DecorationImage(image: FileImage(file!), fit: BoxFit.cover) : null,
+          image:
+              file != null
+                  ? DecorationImage(image: FileImage(file!), fit: BoxFit.cover)
+                  : null,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
-        child: widget.isRow
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: widgets,
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: widgets,
-              ),
+        child:
+            widget.isRow
+                ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: widgets,
+                )
+                : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: widgets,
+                ),
       ),
     );
   }

@@ -21,7 +21,7 @@ class RecipeService {
           .where('name', isGreaterThanOrEqualTo: keyword)
           .where(
             'name',
-            isLessThan: keyword + '\uf8ff',
+            isLessThan: '${keyword}\uf8ff',
           ) // Unicode character for prefix matching
           .snapshots();
     }
@@ -37,6 +37,8 @@ class RecipeService {
       }
     });
   }
+
+  // READ: Get a list of recipes by category and keyword
 
   // CREATE
 
