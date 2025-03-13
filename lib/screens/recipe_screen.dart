@@ -19,10 +19,20 @@ class RecipeScreen extends ConsumerWidget {
         action: [
           if (user?.uid == recipe["userId"])
             IconButton(
-              icon: Icon(Icons.edit),
+              icon: Icon(Icons.edit_rounded),
               onPressed: () {
                 Navigator.pushNamed(context, '/post', arguments: recipe);
               },
+            ),
+          if (user?.uid == recipe["userId"])
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.delete_forever_rounded),
+            ),
+          if (user?.uid != recipe["userId"])
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.bookmark_add_rounded),
             ),
         ],
       ),
