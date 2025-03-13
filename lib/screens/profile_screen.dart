@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/providers/bottom_navbar_provider.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
 import 'package:my_recipe/screens/premium_ad_screen.dart';
+import 'package:my_recipe/screens/recipe_grid_screen.dart';
 import 'package:my_recipe/services/auth_service.dart';
+import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/services/user_service.dart';
 
 final Size buttonFixedSize = Size.fromWidth(190);
@@ -173,7 +175,10 @@ class _ProfileHeader extends StatelessWidget {
 
 // Profile Services
 class _ProfileServices extends StatelessWidget {
-  const _ProfileServices();
+  _ProfileServices();
+
+  final User _user = FirebaseAuth.instance.currentUser!;
+  final RecipeService _recipeService = RecipeService();
 
   @override
   Widget build(BuildContext context) {
@@ -192,7 +197,21 @@ class _ProfileServices extends StatelessWidget {
                 leading: Icon(Icons.collections_bookmark_rounded),
                 title: Text("สูตรอาหารของฉัน"),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => RecipeGridScreen(
+                              title: "สูตรอาหารของฉัน",
+                              queryBuilder:
+                                  () => _recipeService.getRecipesByUserId(
+                                    _user.uid,
+                                  ),
+                            ),
+                      ),
+                    );
+                  },
                   icon: Icon(Icons.navigate_next_rounded),
                 ),
               ),

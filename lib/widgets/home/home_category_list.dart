@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_recipe/screens/recipe_grid_screen.dart';
+import 'package:my_recipe/services/recipe_service.dart';
 
 final List<Map<String, String>> categories = <Map<String, String>>[
   {"icon": "🍳", "type": "อาหารตามสั่ง"},
@@ -48,14 +50,14 @@ class HomeCategoryList extends StatelessWidget {
 /// - `_categoryName`: The name of the category to be displayed.
 /// - `_icon`: The icon representing the category.
 class _CategoryCard extends StatelessWidget {
-  const _CategoryCard({
-    required String categoryIcon,
-    required String categoryTitle,
-  }) : _categoryTitle = categoryTitle,
-       _categoryIcon = categoryIcon;
+  _CategoryCard({required String categoryIcon, required String categoryTitle})
+    : _categoryTitle = categoryTitle,
+      _categoryIcon = categoryIcon;
 
   final String _categoryIcon;
   final String _categoryTitle;
+
+  final RecipeService _recipeService = RecipeService();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,20 @@ class _CategoryCard extends StatelessWidget {
       clipBehavior:
           Clip.antiAliasWithSaveLayer, // Clip behavior to prevent overflow when hold InkWell
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => RecipeGridScreen(
+                    title: _categoryTitle,
+                    queryBuilder:
+                        () =>
+                            _recipeService.getRecipesByCategory(_categoryTitle),
+                  ),
+            ),
+          );
+        },
         child: SizedBox(
           width: 70,
           child: Column(

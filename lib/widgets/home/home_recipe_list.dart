@@ -1,14 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_recipe/screens/recipe_grid_screen.dart';
-import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/widgets/recipe_card.dart';
 
 class HomeRecipeList extends StatelessWidget {
-  HomeRecipeList({super.key, required String title}) : _title = title;
+  const HomeRecipeList({
+    super.key,
+    required String title,
+    required Stream<QuerySnapshot> Function() queryBuilder,
+  }) : _title = title,
+       _queryBuilder = queryBuilder;
 
   final String _title;
-  final RecipeService _recipeService = RecipeService();
+  final Stream<QuerySnapshot> Function() _queryBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,11 @@ class HomeRecipeList extends StatelessWidget {
                   () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RecipeGridScreen(title: _title),
+                      builder:
+                          (context) => RecipeGridScreen(
+                            title: _title,
+                            queryBuilder: _queryBuilder,
+                          ),
                     ),
                   ),
               child: Row(
@@ -48,7 +56,7 @@ class HomeRecipeList extends StatelessWidget {
         SizedBox(
           height: 200,
           child: StreamBuilder<QuerySnapshot>(
-            stream: _recipeService.getRecipes(keyword: ''),
+            stream: _queryBuilder(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());

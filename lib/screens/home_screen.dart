@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_recipe/screens/post_screen.dart';
+import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/services/user_service.dart';
 import 'package:my_recipe/widgets/home/home_category_list.dart';
 import 'package:my_recipe/widgets/home/home_recipe_list.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final RecipeService _recipeService = RecipeService();
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +36,18 @@ class HomeScreen extends StatelessWidget {
             children: <Widget>[
               _HomeHeader(),
               HomeCategoryList(),
-              HomeRecipeList(title: "แนะนำสำหรับคุณ"),
-              HomeRecipeList(title: "Like มากที่สุด"),
-              HomeRecipeList(title: "มีวิดีโอให้ดู"),
+              HomeRecipeList(
+                title: "แนะนำสำหรับคุณ",
+                queryBuilder: _recipeService.getRecipes,
+              ),
+              HomeRecipeList(
+                title: "Like มากที่สุด",
+                queryBuilder: _recipeService.getMostLikedRecipes,
+              ),
+              HomeRecipeList(
+                title: "มีวิดีโอให้ดู",
+                queryBuilder: _recipeService.getRecipesWithVideo,
+              ),
             ],
           ),
         ),

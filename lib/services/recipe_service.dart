@@ -8,26 +8,24 @@ class RecipeService {
     'recipes',
   );
 
+  // READ: Get a list of recipes
+  Stream<QuerySnapshot> getRecipes() {
+    return _recipes.snapshots();
+  }
+
+  // READ: Get a list of recipes which has the most likes
+  Stream<QuerySnapshot> getMostLikedRecipes() {
+    return _recipes.orderBy('likes', descending: true).snapshots();
+  }
+
+  // READ: Get a list of recipes which has a video
+  Stream<QuerySnapshot> getRecipesWithVideo() {
+    return _recipes.where('videoUrl', isNotEqualTo: '').snapshots();
+  }
+
   // READ: Get a list of recipes by userId
   Stream<QuerySnapshot> getRecipesByUserId(String userId) {
     return _recipes.where('userId', isEqualTo: userId).snapshots();
-  }
-
-  // READ: Get a list of recipes by keyword
-  Stream<QuerySnapshot> getRecipes({String keyword = ''}) {
-    if (keyword.isEmpty) {
-      // If keyword is empty, return all recipes
-      return _recipes.snapshots();
-    } else {
-      // If keyword is provided, filter recipes by name (supports Thai)
-      return _recipes
-          .where('name', isGreaterThanOrEqualTo: keyword)
-          .where(
-            'name',
-            isLessThan: '${keyword}\uf8ff',
-          ) // Unicode character for prefix matching
-          .snapshots();
-    }
   }
 
   // READ: Get a single recipe by recipeId
@@ -39,6 +37,11 @@ class RecipeService {
         return null;
       }
     });
+  }
+
+  // READ: Get a list of recipes by category
+  Stream<QuerySnapshot> getRecipesByCategory(String category) {
+    return _recipes.where('category', isEqualTo: category).snapshots();
   }
 
   // CREATE: Upload a file to Supabase Storage
