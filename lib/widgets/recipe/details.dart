@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_recipe/providers/details_bar_provider.dart';
@@ -15,6 +16,32 @@ class Detail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int detailBarIdx = ref.watch(detailsBarProvider);
+
+    final MarkdownStyleSheet markdownStyleSheet = MarkdownStyleSheet(
+      h1: Theme.of(context).textTheme.headlineLarge?.copyWith(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      h2: Theme.of(context).textTheme.headlineMedium?.copyWith(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      h3: Theme.of(context).textTheme.headlineMedium?.copyWith(
+        fontSize: 22,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      h4: Theme.of(context).textTheme.bodyLarge?.copyWith(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      h5: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        fontSize: 18,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      p: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      blockquote: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+    );
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -45,19 +72,19 @@ class Detail extends ConsumerWidget {
                     ),
                   ),
                 if (detailBarIdx == 0)
-                  Text(
-                    recipe["description"] ?? "",
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  MarkdownBody(
+                    data: recipe["description"] ?? "",
+                    styleSheet: markdownStyleSheet,
                   )
                 else if (detailBarIdx == 1)
-                  Text(
-                    recipe["ingredient"] ?? "",
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  MarkdownBody(
+                    data: recipe["ingredient"] ?? "",
+                    styleSheet: markdownStyleSheet,
                   )
                 else if (detailBarIdx == 2)
-                  Text(
-                    recipe["instruction"] ?? "",
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  MarkdownBody(
+                    data: recipe["instruction"] ?? "",
+                    styleSheet: markdownStyleSheet,
                   ),
               ],
             );

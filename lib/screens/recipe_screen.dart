@@ -1,25 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_recipe/core/theme/custom_theme/color_scheme.dart';
+import 'package:my_recipe/widgets/navigation_bar/top_navbar.dart';
 import 'package:my_recipe/widgets/recipe/details.dart';
 import 'package:my_recipe/widgets/recipe/details_bar.dart';
 
 class RecipeScreen extends ConsumerWidget {
-  const RecipeScreen({super.key, required this.recipe});
+  RecipeScreen({super.key, required this.recipe});
 
   final Map<String, dynamic> recipe;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back_ios),
-          ),
+      appBar: TopNavBar(
+        title: "",
+        action: [
+          if (user?.uid == recipe["userId"])
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                Navigator.pushNamed(context, '/post', arguments: recipe);
+              },
+            ),
         ],
       ),
       body: SingleChildScrollView(
@@ -54,11 +58,10 @@ class RecipeScreen extends ConsumerWidget {
                 Padding(
                   padding: EdgeInsets.only(
                     top: 160,
-                    left: 40,
-                    right: 40,
+                    left: MediaQuery.of(context).size.width * 0.1,
+                    right: MediaQuery.of(context).size.width * 0.1,
                     bottom: 12,
                   ),
-
                   child: Column(
                     children: [
                       Container(
@@ -67,7 +70,6 @@ class RecipeScreen extends ConsumerWidget {
                           horizontal: 20,
                         ),
                         width: 350,
-                        height: 142,
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.onPrimary,
                           borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -85,29 +87,12 @@ class RecipeScreen extends ConsumerWidget {
                                 textAlign: TextAlign.center,
                               ),
                               Text(
-                                '[06/02/2028 - 12:30:00]',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'โดย: ',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodyMedium?.copyWith(
-                                        color: CustomColorScheme.blackColor,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: 'ไบรท์บวร',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodyMedium?.copyWith(
-                                        color: CustomColorScheme.yellowColor,
-                                      ),
-                                    ),
-                                  ],
+                                "[${DateTime.fromMillisecondsSinceEpoch(recipe["createdAt"].millisecondsSinceEpoch).toLocal().toString().split('.')[0]}]",
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                               Row(
@@ -115,14 +100,17 @@ class RecipeScreen extends ConsumerWidget {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildIconText(
+                                    context,
                                     icon: Icons.dining,
                                     text: recipe["difficulty"],
                                   ),
                                   _buildIconText(
+                                    context,
                                     icon: Icons.remove_red_eye,
                                     text: recipe["views"].toString(),
                                   ),
                                   _buildIconText(
+                                    context,
                                     icon: Icons.favorite,
                                     text: recipe["likes"].toString(),
                                   ),
@@ -138,7 +126,7 @@ class RecipeScreen extends ConsumerWidget {
               ],
             ),
             DetailsBar(),
-            SizedBox(height: 10,),
+            SizedBox(height: 10),
             Detail(recipe: recipe),
           ],
         ),
@@ -146,7 +134,11 @@ class RecipeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildIconText({required IconData icon, required String text}) {
+  Widget _buildIconText(
+    BuildContext context, {
+    required IconData icon,
+    required String text,
+  }) {
     Map<String, dynamic> difColors = {
       'ง่าย': Colors.green,
       'ปานกลาง': Colors.orange,
@@ -158,7 +150,7 @@ class RecipeScreen extends ConsumerWidget {
     if (difColors.containsKey(text)) {
       difTextColor = difColors[text];
     } else {
-      difTextColor = Colors.black;
+      difTextColor = Theme.of(context).colorScheme.onSurface;
     }
 
     return Row(
