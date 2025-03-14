@@ -1,35 +1,47 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/widgets/navigation_bar/top_navbar.dart';
 import 'package:my_recipe/widgets/recipe/details.dart';
 import 'package:my_recipe/widgets/recipe/details_bar.dart';
 
-class RecipeScreen extends ConsumerWidget {
+class RecipeScreen extends StatefulWidget {
   RecipeScreen({super.key, required this.recipe});
 
   final Map<String, dynamic> recipe;
+  @override
+  State<RecipeScreen> createState()=> _RecipeScreenState();
+}
+class _RecipeScreenState extends State<RecipeScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
+  final _service = RecipeService();
+  late bool isLikedByUser;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    isLikedByUser = widget.recipe['likes']?.contains(user?.uid) ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopNavBar(
         title: "",
         action: [
-          if (user?.uid == recipe["userId"])
+          if (user?.uid == widget.recipe["userId"])
             IconButton(
               icon: Icon(Icons.edit_rounded),
               onPressed: () {
-                Navigator.pushNamed(context, '/post', arguments: recipe);
+                Navigator.pushNamed(context, '/post', arguments: widget.recipe);
               },
             ),
-          if (user?.uid == recipe["userId"])
+          if (user?.uid == widget.recipe["userId"])
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.delete_forever_rounded),
             ),
-          if (user?.uid != recipe["userId"])
+          if (user?.uid != widget.recipe["userId"])
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.bookmark_add_rounded),
@@ -41,7 +53,7 @@ class RecipeScreen extends ConsumerWidget {
           children: [
             Stack(
               children: [
-                recipe["imageUrl"].toString().isEmpty
+                widget.recipe["imageUrl"].toString().isEmpty
                     ? Container(
                       color: Theme.of(context).colorScheme.onSurface,
                       height: 230,
@@ -61,7 +73,7 @@ class RecipeScreen extends ConsumerWidget {
                       height: 230,
                       width: double.infinity,
                       child: Image.network(
-                        recipe["imageUrl"],
+                        widget.recipe["imageUrl"],
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -89,7 +101,7 @@ class RecipeScreen extends ConsumerWidget {
                           child: Column(
                             children: [
                               Text(
-                                recipe["name"],
+                                widget.recipe["name"],
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -97,7 +109,7 @@ class RecipeScreen extends ConsumerWidget {
                                 textAlign: TextAlign.center,
                               ),
                               Text(
-                                "[${DateTime.fromMillisecondsSinceEpoch(recipe["createdAt"].millisecondsSinceEpoch).toLocal().toString().split('.')[0]}]",
+                                "[${DateTime.fromMillisecondsSinceEpoch(widget.recipe["createdAt"].millisecondsSinceEpoch).toLocal().toString().split('.')[0]}]",
                                 style: Theme.of(
                                   context,
                                 ).textTheme.bodySmall?.copyWith(
@@ -112,17 +124,17 @@ class RecipeScreen extends ConsumerWidget {
                                   _buildIconText(
                                     context,
                                     icon: Icons.dining,
-                                    text: recipe["difficulty"],
+                                    text: widget.recipe["difficulty"],
                                   ),
                                   _buildIconText(
                                     context,
                                     icon: Icons.remove_red_eye,
-                                    text: recipe["views"].toString(),
+                                    text: widget.recipe["views"].toString(),
                                   ),
                                   _buildIconText(
                                     context,
                                     icon: Icons.favorite,
-                                    text: recipe["likes"].toString(),
+                                    text: widget.recipe["likes"].length.toString(),
                                   ),
                                 ],
                               ),
@@ -137,8 +149,28 @@ class RecipeScreen extends ConsumerWidget {
             ),
             DetailsBar(),
             SizedBox(height: 10),
-            Detail(recipe: recipe),
+            Detail(recipe: widget.recipe),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final updatedLikes = widget.recipe['likes'];
+
+          if (isLikedByUser) {
+            updatedLikes.remove(user!.uid);
+          } else {
+            updatedLikes.add(user!.uid);
+          }
+          setState(() {
+            isLikedByUser = !isLikedByUser;
+          });
+            await _service.updateRecipeLike(widget.recipe['recipeId'], updatedLikes);
+        },
+        shape: CircleBorder(),
+        child: Icon(
+          Icons.favorite,
+          color: isLikedByUser ? Colors.red[300] : null,
         ),
       ),
     );

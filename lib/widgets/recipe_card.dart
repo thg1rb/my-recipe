@@ -70,7 +70,7 @@ class RecipeCard extends StatelessWidget {
                           children: <Widget>[
                             Icon(Icons.favorite_rounded, size: 15),
                             Text(
-                              recipe["likes"].toString(),
+                              recipe["likes"].length.toString(),
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
