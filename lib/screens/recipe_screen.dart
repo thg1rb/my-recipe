@@ -122,7 +122,7 @@ class RecipeScreen extends ConsumerWidget {
                                   _buildIconText(
                                     context,
                                     icon: Icons.favorite,
-                                    text: recipe["likes"].toString(),
+                                    text: recipe["likes"].length.toString(),
                                   ),
                                 ],
                               ),

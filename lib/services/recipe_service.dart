@@ -86,6 +86,7 @@ class RecipeService {
     try {
       // Add some fields
       final response = await _recipes.add({
+        'recipeId': '',
         'userId': userId,
         'name': name,
         'category': category,
@@ -124,6 +125,7 @@ class RecipeService {
 
       // Update the image and video URLs if they are not null
       await _recipes.doc(recipeId).update({
+        'recipeId': recipeId,
         'imageUrl': imageUrl ?? '',
         'videoUrl': videoUrl ?? '',
       });

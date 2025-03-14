@@ -20,13 +20,17 @@ class BookmarkService {
     required String name,
   }) async {
     try {
-      await _bookmarks.add({
+      final response = await _bookmarks.add({
         'userId': userId,
+        'bookmarkId': '',
         'name': name,
         'recipesId': [],
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
       });
+      // Update the bookmarkId with the document ID
+      final bookmarkId = response.id;
+      await _bookmarks.doc(bookmarkId).update({'bookmarkId': bookmarkId});
     } catch (e) {
       print(e);
     }
