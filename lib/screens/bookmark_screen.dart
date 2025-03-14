@@ -18,7 +18,12 @@ class BookmarkScreen extends StatelessWidget {
   final BookmarkService _bookmarkService = BookmarkService();
 
   // CREATE and EDIT AlertDialog
-  void _showCreateOrEditDialog(BuildContext context) {
+  void _showCreateOrEditDialog(
+    BuildContext context,
+    bool isUpdate,
+    [String? bookmarkId]
+  ) {
+    if (isUpdate == false) {_bookmarkTitle.clear();}
     showDialog(
       context: context,
       builder:
@@ -26,7 +31,7 @@ class BookmarkScreen extends StatelessWidget {
             key: _formKey,
             child: AlertDialog(
               title: Text(
-                "สร้างบันทึกสูตรอาหารใหม่", // Save or Edit
+                isUpdate ? "แก้ไขบันทึกสูตรอาหาร" : "สร้างบันทึกสูตรอาหารใหม่",
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -70,9 +75,18 @@ class BookmarkScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             log("ดำเนินการเสร็จสิ้น"); // Debugging
+                            isUpdate
+                                ? await _bookmarkService.updateBookmark(
+                                  bookmarkId!,
+                                  _bookmarkTitle.text,
+                                )
+                                : await _bookmarkService.createBookmark(
+                                  userId: user.uid,
+                                  name: _bookmarkTitle.text,
+                                );
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).clearSnackBars();
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -242,7 +256,12 @@ class BookmarkScreen extends StatelessWidget {
                         itemBuilder:
                             (context) => [
                               PopupMenuItem(
-                                onTap: () => _showCreateOrEditDialog(context),
+                                onTap:
+                                    () => _showCreateOrEditDialog(
+                                      context,
+                                      true,
+                                      bookmark['bookmarkId'],
+                                    ),
                                 child: Row(
                                   children: <Widget>[
                                     Icon(Icons.edit_rounded),
@@ -282,56 +301,81 @@ class BookmarkScreen extends StatelessWidget {
         persistentFooterButtons: <Widget>[
           StreamBuilder<bool>(
             stream: _userService.isPremiumUser(user.uid),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+            builder: (context, premiumSnapshot) {
+              if (premiumSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data! == false) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  PremiumAdScreen(),
-                          transitionsBuilder: (
-                            context,
-                            animation,
-                            secondaryAnimation,
-                            child,
-                          ) {
-                            const begin = Offset(0.0, 1.0);
-                            const end = Offset.zero;
-                            const curve = Curves.ease;
+              } else if (premiumSnapshot.hasError) {
+                return Center(child: Text('Error: ${premiumSnapshot.error}'));
+              } else {
+                bool isPremium = premiumSnapshot.data!;
 
-                            var tween = Tween(
-                              begin: begin,
-                              end: end,
-                            ).chain(CurveTween(curve: curve));
-                            var offsetAnimation = animation.drive(tween);
+                return StreamBuilder<int>(
+                  stream: _bookmarkService.getBookmarkCount(user.uid),
+                  builder: (context, bookmarkSnapshot) {
+                    if (bookmarkSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (bookmarkSnapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${bookmarkSnapshot.error}'),
+                      );
+                    } else if (!bookmarkSnapshot.hasData) {
+                      return Center(child: Text('No bookmark'));
+                    } else {
+                      int bookmarkCount = bookmarkSnapshot.data!;
 
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
+                      return SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (isPremium) {
+                              _showCreateOrEditDialog(context, false);
+                            } else {
+                              if (bookmarkCount > 2) {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder:
+                                        (
+                                          context,
+                                          animation,
+                                          secondaryAnimation,
+                                        ) => PremiumAdScreen(),
+                                    transitionsBuilder: (
+                                      context,
+                                      animation,
+                                      secondaryAnimation,
+                                      child,
+                                    ) {
+                                      const begin = Offset(0.0, 1.0);
+                                      const end = Offset.zero;
+                                      const curve = Curves.ease;
+
+                                      var tween = Tween(
+                                        begin: begin,
+                                        end: end,
+                                      ).chain(CurveTween(curve: curve));
+                                      var offsetAnimation = animation.drive(
+                                        tween,
+                                      );
+
+                                      return SlideTransition(
+                                        position: offsetAnimation,
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              } else {
+                                _showCreateOrEditDialog(context, false);
+                              }
+                            }
                           },
+                          child: Text("สร้างบันทึกสูตรอาหารใหม่"),
                         ),
                       );
-                    },
-                    child: Text("สร้างบันทึกสูตรอาหารใหม่"),
-                  ),
-                );
-              } else {
-                return SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => _showCreateOrEditDialog(context),
-                    child: Text("สร้างบันทึกสูตรอาหารใหม่"),
-                  ),
+                    }
+                  },
                 );
               }
             },

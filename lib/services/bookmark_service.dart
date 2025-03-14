@@ -13,6 +13,15 @@ class BookmarkService {
         .snapshots();
   }
 
+  Stream<int> getBookmarkCount(String userId) {
+  return FirebaseFirestore.instance
+      .collection('bookmarks')
+      .where('userId', isEqualTo: userId)
+      .snapshots()
+      .map((snapshot) => snapshot.size); // Get only the count
+}
+
+
   // CREATE
   // TODO: Return Future<String?> to detect errors
   Future<void> createBookmark({
@@ -37,6 +46,11 @@ class BookmarkService {
   }
 
   // TODO: UPDATE
+  Future<void> updateBookmark(String bookmarkId, String updatedName) {
+    return _bookmarks.doc(bookmarkId).update({
+      'name' : updatedName
+    }); 
+  }
 
   // TODO: DELETE
 }
