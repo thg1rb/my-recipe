@@ -86,7 +86,7 @@ class _RegisterFormState extends State<_RegisterForm> {
         color: Theme.of(context).colorScheme.surface.withAlpha(128),
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 25),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
       child: Column(
         children: <Widget>[
           Form(
@@ -129,14 +129,14 @@ class _RegisterFormState extends State<_RegisterForm> {
                     if (value == null ||
                         value.isEmpty ||
                         !value.contains("@")) {
-                      return "กรุณาระบุอีเมลล์";
+                      return "กรุณาระบุอีเมล";
                     }
                     return null;
                   },
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration: InputDecoration(
-                    hintText: "อีเมลล์",
+                    hintText: "อีเมล",
                     hintStyle: TextStyle(color: Colors.grey[400]),
                     filled: true,
                     fillColor: Colors.white,

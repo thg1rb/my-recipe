@@ -26,7 +26,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             SizedBox(
               width: double.infinity,
               child: Text(
-                "ลืมรหัสผ่าน?",
+                "ลืมรหัสผ่านใช่หรือไม่?",
                 style: Theme.of(context).textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
@@ -34,8 +34,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             Center(
               child: Column(
                 children: [
-                  Text('กรอกอีเมลของคุณแล้วเราจะส่งข้อความ'),
-                  Text('ช่วยรีเซ็ทรหัสผ่านของคุณ'),
+                  Text(
+                    'ระบุอีเมลของคุณแล้วเราจะส่งข้อความ\nช่วยรีเซ็ทรหัสผ่านของคุณ',
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             ),
@@ -94,7 +96,7 @@ class _ResetFormState extends State<ResetForm> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty || !value.contains("@")) {
-                  return "กรุณาระบุอีเมลล์";
+                  return "กรุณาระบุอีเมล";
                 }
                 return null;
               },
@@ -102,36 +104,73 @@ class _ResetFormState extends State<ResetForm> {
             ),
           ),
           SizedBox(height: 20),
-          ElevatedButton(
-            onPressed:
-                isSending
-                    ? null
-                    : () async {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          isSending = true;
-                        });
-                        try {
-                          await _auth.sendPasswordResetLink(_email.text);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("ส่งอีเมลรีเซ็ทรหัสผ่านเสร็จสิ้น"),
-                            ),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("เกิดข้อผิดพลาด กรุณาลองใหม่")),
-                          );
-                        } finally {
+          SizedBox(
+            width: 230,
+            child: ElevatedButton(
+              onPressed:
+                  isSending
+                      ? null
+                      : () async {
+                        if (_formKey.currentState!.validate()) {
                           setState(() {
-                            isSending = false; 
+                            isSending = true;
                           });
+                          try {
+                            await _auth.sendPasswordResetLink(_email.text);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "✅ ส่งอีเมลรีเซ็ทรหัสผ่านเสร็จสิ้น",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "❌ เกิดข้อผิดพลาด กรุณาลองใหม่",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.onError,
+                              ),
+                            );
+                          } finally {
+                            setState(() {
+                              isSending = false;
+                            });
                           }
-                      }
-                    },
-            child: isSending
-                  ? CircularProgressIndicator(strokeWidth: 3,)
-                  : Text('ยืนยัน'),
+                        }
+                      },
+              child:
+                  isSending
+                      ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                          Text("กำลังดำเนินการ..."),
+                        ],
+                      )
+                      : Text('ยืนยันการรีเซ็ท'),
+            ),
           ),
         ],
       ),

@@ -51,7 +51,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
               } else {
                 return AlertDialog(
                   title: Text(
-                    "เลือกบันทึกที่ต้องการเพิ่ม",
+                    "บันทึกสูตรอาหารทั้งหมด",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
@@ -110,7 +110,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    "✅ ลบบันทึกเสร็จสิ้น",
+                                    "✅ ดำเนินการเปลี่ยนแปลงเสร็จสิ้น",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color:
@@ -126,18 +126,15 @@ class _RecipeScreenState extends State<RecipeScreen> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  Theme.of(context).colorScheme.error,
+                                  Theme.of(context).colorScheme.primary,
                             ),
-                            child: Text("ยืนยันการลบบันทึก"),
+                            child: Text("ยืนยันการเปลี่ยนแปลง"),
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
+                        GestureDetector(
+                          onTap: () {
                             Navigator.pop(context);
                           },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.transparent,
-                          ),
                           child: Text(
                             "ยกเลิก",
                             style: Theme.of(

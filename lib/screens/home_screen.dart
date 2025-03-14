@@ -17,7 +17,6 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButton: IconButton(
         onPressed: () {
-          // TODO: Navigate to Create Recipe Screen
           Navigator.of(context).push(createRoute());
         },
         icon: Icon(Icons.add_rounded, size: 35),

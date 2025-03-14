@@ -88,14 +88,14 @@ class _LoginFormState extends State<_LoginForm> {
                     if (value == null ||
                         value.isEmpty ||
                         !value.contains("@")) {
-                      return "กรุณาระบุอีเมลล์";
+                      return "กรุณาระบุอีเมล";
                     }
                     return null;
                   },
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration: InputDecoration(
-                    hintText: "อีเมลล์",
+                    hintText: "อีเมล",
                     hintStyle: TextStyle(color: Colors.grey[400]),
                     filled: true,
                     fillColor: Colors.white,
@@ -148,6 +148,26 @@ class _LoginFormState extends State<_LoginForm> {
                         _isObsecureText
                             ? Icons.visibility_rounded
                             : Icons.visibility_off_rounded,
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ForgotPassword()),
+                    );
+                  },
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "ลืมรหัสผ่าน?",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.deepPurple,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.deepPurple,
                       ),
                     ),
                   ),
@@ -343,31 +363,12 @@ class _LoginFormState extends State<_LoginForm> {
                           SizedBox(width: 10),
                           Text(
                             "เข้าสู่ระบบด้วย Google",
-                            style: TextStyle(color: Colors.black)
+                            style: TextStyle(color: Colors.black),
                           ),
                         ],
                       ),
             ),
           ),
-          SizedBox(height: 10,),
-          GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ForgotPassword(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "ลืมรหัสผ่าน?",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.grey,
-                        ),
-                      ),
-                    ),
         ],
       ),
     );
