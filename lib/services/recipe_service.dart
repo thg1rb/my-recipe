@@ -135,9 +135,9 @@ class RecipeService {
   }
 
   // UPDATE
-  Future<void> updateRecipeLike(String recipeId, bool isLike) {
+  Future<void> updateRecipeLike(String recipeId, List<dynamic> newList) {
     return _recipes.doc(recipeId).update({
-      'likes': FieldValue.increment(isLike ? 1 : -1),
+      'likes' : newList
     }); 
   }
   // DELETE
