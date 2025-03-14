@@ -97,7 +97,7 @@ class RecipeService {
         'ingredient': ingredient,
         'instruction': instruction,
         'views': 0,
-        'likes': 0,
+        'likes': [],
         'imageUrl': '',
         'videoUrl': '',
         'createdAt': DateTime.now(),
@@ -141,5 +141,41 @@ class RecipeService {
     return _recipes.doc(recipeId).update({'likes': newList});
   }
 
-  // DELETE
+  // DELETE a recipe by recipeId (and its image and video from Supabase Storage)
+  Future<void> deleteRecipe(
+    String recipeId,
+    String imageUrl,
+    String videoUrl,
+  ) async {
+    try {
+      // Delete the recipe from Firestore
+      await _recipes.doc(recipeId).delete();
+
+      // Remove the recipeId from bookmarks
+      final bookmarks =
+          await FirebaseFirestore.instance
+              .collection('bookmarks')
+              .where('recipeIds', arrayContains: recipeId)
+              .get();
+
+      for (final bookmark in bookmarks.docs) {
+        final recipeIds = List<String>.from(bookmark['recipeIds']);
+        recipeIds.remove(recipeId);
+        await FirebaseFirestore.instance
+            .collection('bookmarks')
+            .doc(bookmark.id)
+            .update({'recipeIds': recipeIds});
+      }
+
+      // Delete the image and video from Supabase Storage
+      if (imageUrl.isNotEmpty) {
+        await Supabase.instance.client.storage.from('files').remove([imageUrl]);
+      }
+      if (videoUrl.isNotEmpty) {
+        await Supabase.instance.client.storage.from('files').remove([videoUrl]);
+      }
+    } catch (e) {
+      print('Delete recipe exception: $e');
+    }
+  }
 }

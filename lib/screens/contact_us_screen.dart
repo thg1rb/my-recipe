@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_recipe/widgets/navigation_bar/top_navbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactUs extends StatelessWidget {
@@ -7,7 +8,7 @@ class ContactUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('ติดต่อเรา')),
+      appBar: TopNavBar(title: "ติดต่อเรา", action: []),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Wrap(
@@ -38,8 +39,11 @@ class ContactUs extends StatelessWidget {
                         Icon(Icons.phone, size: 30),
                         SizedBox(width: 10),
                         GestureDetector(
-                          child: Text('082-712-5665', style: TextStyle(fontSize: 20),),
-                        )
+                          child: Text(
+                            '082-712-5665',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
                       ],
                     ),
                     Row(
@@ -47,8 +51,11 @@ class ContactUs extends StatelessWidget {
                         Icon(Icons.mail, size: 30),
                         SizedBox(width: 10),
                         GestureDetector(
-                          child: Text('kerdsiri.s@ku.th', style: TextStyle(fontSize: 20),),
-                        )
+                          child: Text(
+                            'kerdsiri.s@ku.th',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
                       ],
                     ),
                     Row(
@@ -56,8 +63,11 @@ class ContactUs extends StatelessWidget {
                         Icon(Icons.mail, size: 30),
                         SizedBox(width: 10),
                         GestureDetector(
-                          child: Text('bowornrat.t@ku.th', style: TextStyle(fontSize: 20),),
-                        )
+                          child: Text(
+                            'bowornrat.t@ku.th',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -72,12 +82,12 @@ class ContactUs extends StatelessWidget {
               ),
             ),
             SocialMediaCard(
-              icon: Icons.discord,
+              icon: Icons.discord_rounded,
               title: 'tonnamlek',
               url: 'https://www.google.com/',
             ),
             SocialMediaCard(
-              icon: Icons.discord,
+              icon: Icons.discord_rounded,
               title: 'brightess',
               url: 'http://discordapp.com/users/630783537309810700',
             ),
@@ -100,16 +110,14 @@ class SocialMediaCard extends StatelessWidget {
   final String url;
   @override
   Widget build(BuildContext context) {
-    
     return InkWell(
       onTap: () async {
         final Uri uri = Uri.parse(url);
         if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('ไม่สามารถเปิดลิงก์นี้ได้: $url')),
-  );
-}
-
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('ไม่สามารถเปิดลิงก์นี้ได้: $url')),
+          );
+        }
       },
       child: Container(
         width: 371,

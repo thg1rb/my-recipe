@@ -28,7 +28,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     isLikedByUser = widget.recipe['likes']?.contains(user?.uid) ?? false;
   }
 
-  //
+  // Show the bookmark dialog
   void _showBookmarksDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -51,7 +51,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
               } else {
                 return AlertDialog(
                   title: Text(
-                    "เลือกบันทึกที่ต้องการเพิ่ม",
+                    "บันทึกสูตรอาหารทั้งหมด",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
@@ -68,17 +68,17 @@ class _RecipeScreenState extends State<RecipeScreen> {
                                 doc['name'],
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
-                              value: doc['recipesId'].contains(
+                              value: doc['recipeIds'].contains(
                                 widget.recipe['recipeId'],
                               ),
                               onChanged: (bool? value) {
                                 setState(() {
                                   // If the recipe is already in the bookmark, remove it
-                                  if (doc['recipesId'].contains(
+                                  if (doc['recipeIds'].contains(
                                     widget.recipe['recipeId'],
                                   )) {
                                     doc.reference.update({
-                                      'recipesId': FieldValue.arrayRemove([
+                                      'recipeIds': FieldValue.arrayRemove([
                                         widget.recipe['recipeId'],
                                       ]),
                                     });
@@ -86,7 +86,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                                   // Otherwise, add it to the bookmark
                                   else {
                                     doc.reference.update({
-                                      'recipesId': FieldValue.arrayUnion([
+                                      'recipeIds': FieldValue.arrayUnion([
                                         widget.recipe['recipeId'],
                                       ]),
                                     });
@@ -110,7 +110,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    "✅ ลบบันทึกเสร็จสิ้น",
+                                    "✅ ดำเนินการเปลี่ยนแปลงเสร็จสิ้น",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color:
@@ -126,18 +126,15 @@ class _RecipeScreenState extends State<RecipeScreen> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  Theme.of(context).colorScheme.error,
+                                  Theme.of(context).colorScheme.primary,
                             ),
-                            child: Text("ยืนยันการลบบันทึก"),
+                            child: Text("ยืนยันการเปลี่ยนแปลง"),
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
+                        GestureDetector(
+                          onTap: () {
                             Navigator.pop(context);
                           },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.transparent,
-                          ),
                           child: Text(
                             "ยกเลิก",
                             style: Theme.of(
@@ -157,6 +154,101 @@ class _RecipeScreenState extends State<RecipeScreen> {
     );
   }
 
+  // show delete dialog
+  void _showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(
+              "ยืนยันการลบสูตรอาหาร",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(20),
+                  margin: EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.red[100],
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Icon(
+                    Icons.delete_forever_rounded,
+                    size: 40,
+                    color: Colors.red,
+                  ),
+                ),
+                Text(
+                  "คุณแน่ใจหรือไม่ว่าต้องการลบสูตรอาหารนี้?\nข้อมูลจะถูกลบถาวรและไม่สามารถกู้คืนได้อีก",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.red[200]),
+                ),
+              ],
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: <Widget>[
+              Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        await _recipeService.deleteRecipe(
+                          widget.recipe["recipeId"],
+                          "images/${widget.recipe["recipeId"]}",
+                          "video/${widget.recipe["recipeId"]}",
+                        );
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "✅ ลบบันทึกเสร็จสิ้น",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                      child: Text("ยืนยันการลบบันทึก"),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.transparent,
+                    ),
+                    child: Text(
+                      "ยกเลิก",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,7 +264,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             ),
           if (user?.uid == widget.recipe["userId"])
             IconButton(
-              onPressed: () {},
+              onPressed: () => _showDeleteDialog(context),
               icon: Icon(Icons.delete_forever_rounded),
             ),
           if (user?.uid != widget.recipe["userId"])
