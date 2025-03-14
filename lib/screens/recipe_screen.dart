@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:like_button/like_button.dart';
+import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/widgets/navigation_bar/top_navbar.dart';
 import 'package:my_recipe/widgets/recipe/details.dart';
 import 'package:my_recipe/widgets/recipe/details_bar.dart';
@@ -10,7 +12,7 @@ class RecipeScreen extends ConsumerWidget {
 
   final Map<String, dynamic> recipe;
   final User? user = FirebaseAuth.instance.currentUser;
-
+  final _service = RecipeService();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -141,6 +143,16 @@ class RecipeScreen extends ConsumerWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        
+      },
+       shape: CircleBorder(),
+       child: LikeButton(
+        onTap: (isLike) async {
+          _service.updateRecipeLike(recipe['RecipeId'], isLike);
+          return !isLike;
+        },
+       ),)
     );
   }
 

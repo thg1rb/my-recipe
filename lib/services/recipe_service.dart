@@ -135,6 +135,10 @@ class RecipeService {
   }
 
   // UPDATE
-
+  Future<void> updateRecipeLike(String recipeId, bool isLike) {
+    return _recipes.doc(recipeId).update({
+      'likes': FieldValue.increment(isLike ? 1 : -1),
+    }); 
+  }
   // DELETE
 }
