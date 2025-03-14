@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_recipe/services/bookmark_service.dart';
 import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/widgets/navigation_bar/top_navbar.dart';
 import 'package:my_recipe/widgets/recipe/details.dart';
@@ -10,17 +12,149 @@ class RecipeScreen extends StatefulWidget {
 
   final Map<String, dynamic> recipe;
   @override
-  State<RecipeScreen> createState()=> _RecipeScreenState();
+  State<RecipeScreen> createState() => _RecipeScreenState();
 }
+
 class _RecipeScreenState extends State<RecipeScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
-  final _service = RecipeService();
+  final RecipeService _recipeService = RecipeService();
+  final BookmarkService _bookmarkService = BookmarkService();
+
   late bool isLikedByUser;
 
   @override
   void initState() {
     super.initState();
     isLikedByUser = widget.recipe['likes']?.contains(user?.uid) ?? false;
+  }
+
+  //
+  void _showBookmarksDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => StreamBuilder<QuerySnapshot>(
+            stream: _bookmarkService.getBookmarksById(user!.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(
+                  child: Text(
+                    'ไม่มีบันทึกสูตรอาหารใดๆ\nโปรดสร้างบันทึกใหม่!',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                );
+              } else {
+                return AlertDialog(
+                  title: Text(
+                    "เลือกบันทึกที่ต้องการเพิ่ม",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children:
+                          snapshot.data!.docs.map((doc) {
+                            return CheckboxListTile(
+                              controlAffinity: ListTileControlAffinity.leading,
+                              title: Text(
+                                doc['name'],
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              value: doc['recipesId'].contains(
+                                widget.recipe['recipeId'],
+                              ),
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  // If the recipe is already in the bookmark, remove it
+                                  if (doc['recipesId'].contains(
+                                    widget.recipe['recipeId'],
+                                  )) {
+                                    doc.reference.update({
+                                      'recipesId': FieldValue.arrayRemove([
+                                        widget.recipe['recipeId'],
+                                      ]),
+                                    });
+                                  }
+                                  // Otherwise, add it to the bookmark
+                                  else {
+                                    doc.reference.update({
+                                      'recipesId': FieldValue.arrayUnion([
+                                        widget.recipe['recipeId'],
+                                      ]),
+                                    });
+                                  }
+                                });
+                              },
+                            );
+                          }).toList(),
+                    ),
+                  ),
+                  actionsAlignment: MainAxisAlignment.center,
+                  actions: <Widget>[
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "✅ ลบบันทึกเสร็จสิ้น",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.error,
+                            ),
+                            child: Text("ยืนยันการลบบันทึก"),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.transparent,
+                          ),
+                          child: Text(
+                            "ยกเลิก",
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+    );
   }
 
   @override
@@ -43,7 +177,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             ),
           if (user?.uid != widget.recipe["userId"])
             IconButton(
-              onPressed: () {},
+              onPressed: () => _showBookmarksDialog(context),
               icon: Icon(Icons.bookmark_add_rounded),
             ),
         ],
@@ -134,7 +268,9 @@ class _RecipeScreenState extends State<RecipeScreen> {
                                   _buildIconText(
                                     context,
                                     icon: Icons.favorite,
-                                    text: widget.recipe["likes"].length.toString(),
+                                    text:
+                                        widget.recipe["likes"].length
+                                            .toString(),
                                   ),
                                 ],
                               ),
@@ -165,7 +301,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
           setState(() {
             isLikedByUser = !isLikedByUser;
           });
-            await _service.updateRecipeLike(widget.recipe['recipeId'], updatedLikes);
+          await _recipeService.updateRecipeLike(
+            widget.recipe['recipeId'],
+            updatedLikes,
+          );
         },
         shape: CircleBorder(),
         child: Icon(

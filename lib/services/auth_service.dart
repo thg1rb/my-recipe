@@ -137,4 +137,21 @@ class AuthServices {
       return "❌ ออกจากระบบไม่สำเร็จ: $e";
     }
   }
+
+  // Reset Password
+  Future<void> sendEmailVerification(String email) async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+    } catch(e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> sendPasswordResetLink(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    }catch(e) {
+      print(e.toString());
+    }
+  }
 }
