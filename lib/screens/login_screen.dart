@@ -359,7 +359,7 @@ class _LoginFormState extends State<_LoginForm> {
                       )
                       : Row(
                         children: [
-                          Icon(Icons.g_mobiledata_rounded, size: 30),
+                          Image.asset('assets/images/Google_Icons.png', width: 30, height: 30,),
                           SizedBox(width: 10),
                           Text(
                             "เข้าสู่ระบบด้วย Google",
