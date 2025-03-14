@@ -61,6 +61,7 @@ class RecipeCard extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       recipe["name"],
+                      textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Row(

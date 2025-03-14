@@ -29,7 +29,7 @@ class BookmarkService {
         'userId': userId,
         'bookmarkId': '',
         'name': name,
-        'recipesId': [],
+        'recipeIds': [],
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
       });

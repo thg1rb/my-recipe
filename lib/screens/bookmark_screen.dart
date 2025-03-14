@@ -279,7 +279,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                       onTap: () {
                         // Cast the List<dynamic> to List<String>
                         final List<String> recipeIds =
-                            (bookmark["recipesId"] as List<dynamic>)
+                            (bookmark["recipeIds"] as List<dynamic>)
                                 .cast<String>()
                                 .toList();
 
@@ -304,7 +304,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        "จำนวน ${bookmark["recipesId"].toList().length.toString()} สูตร",
+                        "จำนวน ${bookmark["recipeIds"].toList().length.toString()} สูตร",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
