@@ -5,25 +5,21 @@ class BookmarkService {
     'bookmarks',
   );
 
-  // READ
-  Stream<QuerySnapshot> getBookmarks(String userId) {
-    return FirebaseFirestore.instance
-        .collection('bookmarks')
-        .where('userId', isEqualTo: userId)
-        .snapshots();
+  // READ: Get a list of bookmarks
+  Stream<QuerySnapshot> getBookmarksById(String userId) {
+    return _bookmarks.where('userId', isEqualTo: userId).snapshots();
   }
 
+  // READ: Get the number of bookmarks
   Stream<int> getBookmarkCount(String userId) {
-  return FirebaseFirestore.instance
-      .collection('bookmarks')
-      .where('userId', isEqualTo: userId)
-      .snapshots()
-      .map((snapshot) => snapshot.size); // Get only the count
-}
+    return _bookmarks
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.size);
+  }
 
-
-  // CREATE
   // TODO: Return Future<String?> to detect errors
+  // CREATE: Create a new bookmark
   Future<void> createBookmark({
     required String userId,
     required String name,
@@ -45,12 +41,13 @@ class BookmarkService {
     }
   }
 
-  // TODO: UPDATE
+  // UPDATE: Update the bookmark name
   Future<void> updateBookmark(String bookmarkId, String updatedName) {
-    return _bookmarks.doc(bookmarkId).update({
-      'name' : updatedName
-    }); 
+    return _bookmarks.doc(bookmarkId).update({'name': updatedName});
   }
 
-  // TODO: DELETE
+  // DELETE: Delete a bookmark
+  Future<void> deleteBookmark(String bookmarkId) {
+    return _bookmarks.doc(bookmarkId).delete();
+  }
 }

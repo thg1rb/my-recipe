@@ -8,6 +8,11 @@ class RecipeService {
     'recipes',
   );
 
+  // READ: Get a recipe by recipeId
+  Stream<QuerySnapshot> getRecipeById(String recipeId) {
+    return _recipes.where('recipeId', isEqualTo: recipeId).snapshots();
+  }
+
   // READ: Get a list of recipes
   Stream<QuerySnapshot> getRecipes() {
     return _recipes.snapshots();
@@ -28,20 +33,17 @@ class RecipeService {
     return _recipes.where('userId', isEqualTo: userId).snapshots();
   }
 
-  // READ: Get a single recipe by recipeId
-  Stream<DocumentSnapshot?> getRecipeById(String recipeId) {
-    return _recipes.doc(recipeId).snapshots().map((snapshot) {
-      if (snapshot.exists) {
-        return snapshot;
-      } else {
-        return null;
-      }
-    });
-  }
-
   // READ: Get a list of recipes by category
   Stream<QuerySnapshot> getRecipesByCategory(String category) {
     return _recipes.where('category', isEqualTo: category).snapshots();
+  }
+
+  // READ: Get a list of recipes by recipeIds
+  Stream<QuerySnapshot> getRecipesByIds(List<String> recipeIds) {
+    if (recipeIds.isEmpty) {
+      return Stream.empty();
+    }
+    return _recipes.where('recipeId', whereIn: recipeIds).snapshots();
   }
 
   // CREATE: Upload a file to Supabase Storage
@@ -136,9 +138,8 @@ class RecipeService {
 
   // UPDATE
   Future<void> updateRecipeLike(String recipeId, List<dynamic> newList) {
-    return _recipes.doc(recipeId).update({
-      'likes' : newList
-    }); 
+    return _recipes.doc(recipeId).update({'likes': newList});
   }
+
   // DELETE
 }
