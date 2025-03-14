@@ -117,8 +117,8 @@ class _PostScreenState extends State<PostScreen> {
                       children: [
                         FineDropDownBox(
                           title: 'ประเภทอาหาร',
-                          items: ['เมนูข้าว', 'เมนูเส้น', 'ของหวาน'],
-                          colors: [Colors.yellow, Colors.yellow, Colors.yellow],
+                          items: ['อาหารตามสั่ง', 'ก๋วยเตี๋ยว', 'ฟาสต์ฟู้ด','สลัดและยำ', 'เครื่องดื่ม', 'ขนมทานเล่น', 'อาหารญี่ปุ่น', 'อาหารเกาหลี', 'อาหารอินเดีย'],
+                          colors: [Colors.yellow, Colors.yellow, Colors.yellow,Colors.yellow, Colors.yellow, Colors.yellow,Colors.yellow, Colors.yellow, Colors.yellow],
                           id: 'cateDropdown',
                           onSelected: (value) {
                             setState(() {

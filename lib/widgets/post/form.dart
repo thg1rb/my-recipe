@@ -85,7 +85,7 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
         AnimatedContainer(
           duration: Duration(milliseconds: 200),
           width: 400,
-          height: showDropDown ? 240 : 60,
+          height: showDropDown ? 60*widget.items.length.toDouble() : 60,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: CustomColorScheme.yellowColor,
