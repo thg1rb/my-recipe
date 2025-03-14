@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/widgets/home/home_category_list.dart';
 import 'package:my_recipe/widgets/home/home_recipe_list.dart';
 import 'package:my_recipe/screens/post_screen.dart';
+import 'package:my_recipe/services/recipe_service.dart';
 
 class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
-
+  HomeScreen({super.key});
+  final _service = RecipeService();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent),
       floatingActionButton: IconButton(
@@ -32,9 +34,9 @@ class HomeScreen extends ConsumerWidget {
                 HomeHeader(username: "kkerdsiri_", profileUrl: ""),
                 HomeSearchBar(),
                 HomeCategoryList(),
-                HomeRecipeList(title: "แนะนำสำหรับคุณ"),
-                HomeRecipeList(title: "Like มากที่สุด"),
-                HomeRecipeList(title: "มีวิดีโอให้ดู"),
+                HomeRecipeList(title: "แนะนำสำหรับคุณ", queryBuilder: _service.getRecipes),
+                HomeRecipeList(title: "Like มากที่สุด", queryBuilder: _service.getMostLikedRecipes),
+                HomeRecipeList(title: "มีวิดีโอให้ดู", queryBuilder: _service.getRecipesWithVideo),
               ],
             ),
           ),
