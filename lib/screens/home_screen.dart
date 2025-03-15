@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_recipe/screens/post_screen.dart';
 import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/services/user_service.dart';
+import 'package:my_recipe/widgets/home/carousel_ads.dart';
 import 'package:my_recipe/widgets/home/home_category_list.dart';
 import 'package:my_recipe/widgets/home/home_recipe_list.dart';
 
@@ -34,6 +35,7 @@ class HomeScreen extends StatelessWidget {
             runSpacing: 10,
             children: <Widget>[
               _HomeHeader(),
+              CarouselAds(),
               HomeCategoryList(),
               HomeRecipeList(
                 title: "แนะนำสำหรับคุณ",
@@ -151,3 +153,5 @@ class _HomeHeader extends StatelessWidget {
     );
   }
 }
+
+
