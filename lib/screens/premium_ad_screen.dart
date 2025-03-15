@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_recipe/providers/bottom_navbar_provider.dart';
 
 class PremiumAdScreen extends StatelessWidget {
   const PremiumAdScreen({super.key});
@@ -26,31 +28,31 @@ class _PremiumAdHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "เข้าถึงและรับชม",
-            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 48,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "เข้าถึงและรับชม",
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 48,
           ),
-          Text(
-            "สูตรอาหาร",
-            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 48,
-            ),
+        ),
+        Text(
+          "สูตรอาหาร",
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: 48,
           ),
-          Text(
-            "ได้มากขึ้น",
-            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 48,
-            ),
+        ),
+        Text(
+          "ได้มากขึ้น",
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 48,
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 }
 
@@ -111,7 +113,7 @@ class _PremiumAdDetialsCard extends StatelessWidget {
       children: <Widget>[
         Row(
           children: <Widget>[
-            SizedBox(width: 15,),
+            SizedBox(width: 15),
             Icon(_titleIcon, color: _color),
             Text(
               _title,
@@ -140,14 +142,76 @@ class _PremiumAdDetialsCard extends StatelessWidget {
   }
 }
 
-class _PremiumAdFooter extends StatelessWidget {
+class _PremiumAdFooter extends ConsumerWidget {
   const _PremiumAdFooter();
 
+  void showConfirmDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    padding: EdgeInsets.all(20),
+                    margin: EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow[50],
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Icon(
+                      Icons.stars_rounded,
+                      size: 40,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                Text('คุณยืนยันการสมัครสมาชิกหรือไม่'),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ref.read(bottomNavbarIndexProvider.notifier).state = 0;
+      
+                      // PREMIUM SUBSCRIPTION METHOD HERE
+
+                      Navigator.pushNamed(context, '/home');
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('⭐️ คุณได้สมัครสมาชิกเรียบร้อยแล้ว ⭐️')));
+                    },
+                    style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                          ), 
+                    child: Text('Confirm')
+                  ),
+                ),
+                GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "ยกเลิก",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
+              ],
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+          ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: <Widget>[
-        ElevatedButton(onPressed: () {}, child: Text("สมัครพรีเมียม")),
+        ElevatedButton(
+          onPressed: () {
+            showConfirmDialog(context, ref);
+          },
+          child: Text("สมัครพรีเมียม"),
+        ),
         TextButton(
           onPressed: () {
             Navigator.pop(context);
