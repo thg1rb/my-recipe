@@ -23,7 +23,9 @@ class LoginScreen extends StatelessWidget {
               width: double.infinity,
               child: Text(
                 "🍳​ เข้าสู่ระบบ",
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineLarge?.copyWith(color: Colors.black),
               ),
             ),
             _LoginForm(),
@@ -71,7 +73,7 @@ class _LoginFormState extends State<_LoginForm> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withAlpha(128),
+        color: Colors.white.withAlpha(128),
         borderRadius: BorderRadius.circular(10),
       ),
       padding: EdgeInsets.symmetric(vertical: 50, horizontal: 25),
@@ -92,6 +94,7 @@ class _LoginFormState extends State<_LoginForm> {
                     }
                     return null;
                   },
+                  style: TextStyle(color: Colors.black),
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration: InputDecoration(
@@ -110,7 +113,7 @@ class _LoginFormState extends State<_LoginForm> {
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                    prefixIcon: Icon(Icons.email_rounded),
+                    prefixIcon: Icon(Icons.email_rounded, color: Colors.black),
                   ),
                 ),
                 TextFormField(
@@ -122,6 +125,7 @@ class _LoginFormState extends State<_LoginForm> {
                     }
                     return null;
                   },
+                  style: TextStyle(color: Colors.black),
                   autocorrect: false,
                   decoration: InputDecoration(
                     hintText: "รหัสผ่าน",
@@ -139,7 +143,7 @@ class _LoginFormState extends State<_LoginForm> {
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                    prefixIcon: Icon(Icons.lock_rounded),
+                    prefixIcon: Icon(Icons.lock_rounded, color: Colors.black),
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() => _isObsecureText = !_isObsecureText);
@@ -148,6 +152,7 @@ class _LoginFormState extends State<_LoginForm> {
                         _isObsecureText
                             ? Icons.visibility_rounded
                             : Icons.visibility_off_rounded,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -177,7 +182,9 @@ class _LoginFormState extends State<_LoginForm> {
                   children: <Widget>[
                     Text(
                       "ยังไม่มีบัญชีใช่หรือไม่?",
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.black),
                     ),
                     SizedBox(width: 10),
                     GestureDetector(
@@ -233,6 +240,9 @@ class _LoginFormState extends State<_LoginForm> {
                                           content: Text(
                                             errorMessage,
                                             textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           backgroundColor:
                                               Theme.of(
@@ -256,10 +266,7 @@ class _LoginFormState extends State<_LoginForm> {
                                               color: Colors.black,
                                             ),
                                           ),
-                                          backgroundColor:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.onPrimary,
+                                          backgroundColor: Colors.white,
                                         ),
                                       );
                                       // Navigate to Home Screen
@@ -295,7 +302,12 @@ class _LoginFormState extends State<_LoginForm> {
               ],
             ),
           ),
-          Text("หรือ", style: Theme.of(context).textTheme.bodyMedium),
+          Text(
+            "หรือ",
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.black),
+          ),
           // Google Sign in Button
           ElevatedButton(
             onPressed:
@@ -314,6 +326,7 @@ class _LoginFormState extends State<_LoginForm> {
                             content: Text(
                               errorMessage,
                               textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
                             ),
                             backgroundColor:
                                 Theme.of(context).colorScheme.error,
@@ -359,7 +372,11 @@ class _LoginFormState extends State<_LoginForm> {
                       )
                       : Row(
                         children: [
-                          Image.asset('assets/images/Google_Icons.png', width: 30, height: 30,),
+                          Image.asset(
+                            'assets/images/Google_Icons.png',
+                            width: 30,
+                            height: 30,
+                          ),
                           SizedBox(width: 10),
                           Text(
                             "เข้าสู่ระบบด้วย Google",

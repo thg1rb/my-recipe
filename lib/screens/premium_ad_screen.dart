@@ -170,6 +170,13 @@ class _PremiumAdFooter extends ConsumerWidget {
       context: context,
       builder:
           (context) => AlertDialog(
+            title: Text(
+              "ยืนยันการสมัครสมาชิก",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -186,21 +193,17 @@ class _PremiumAdFooter extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
-                Text('คุณยืนยันการสมัครสมาชิกหรือไม่'),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       ref.read(bottomNavbarIndexProvider.notifier).state = 0;
-
-                      // PREMIUM SUBSCRIPTION METHOD HERE
-
                       Navigator.pushNamed(context, '/home');
                       ScaffoldMessenger.of(context).clearSnackBars();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            '⭐️ คุณได้สมัครสมาชิกเรียบร้อยแล้ว ⭐️',
+                            '⭐️ ยินดีต้อนรับสู่การเป็นผู้ใช้งานพรีเมียม ⭐️',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
@@ -214,7 +217,7 @@ class _PremiumAdFooter extends ConsumerWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
-                    child: Text('Confirm'),
+                    child: Text('ยืนยัน'),
                   ),
                 ),
                 GestureDetector(

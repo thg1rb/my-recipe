@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_recipe/services/auth_service.dart';
+import 'package:my_recipe/widgets/navigation_bar/top_navbar.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -7,12 +8,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.navigate_before_rounded, size: 35),
-        ),
-      ),
+      appBar: TopNavBar(title: "", action: []),
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -27,7 +23,9 @@ class RegisterScreen extends StatelessWidget {
               width: double.infinity,
               child: Text(
                 "🍳​ ลงทะเบียน",
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineLarge?.copyWith(color: Colors.black),
               ),
             ),
             _RegisterForm(),
@@ -83,7 +81,7 @@ class _RegisterFormState extends State<_RegisterForm> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withAlpha(128),
+        color: Colors.white.withAlpha(100),
         borderRadius: BorderRadius.circular(10),
       ),
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
@@ -102,6 +100,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                     }
                     return null;
                   },
+                  style: TextStyle(color: Colors.black),
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration: InputDecoration(
@@ -120,7 +119,10 @@ class _RegisterFormState extends State<_RegisterForm> {
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                    prefixIcon: Icon(Icons.person_2_rounded),
+                    prefixIcon: Icon(
+                      Icons.person_2_rounded,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
                 TextFormField(
@@ -133,6 +135,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                     }
                     return null;
                   },
+                  style: TextStyle(color: Colors.black),
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration: InputDecoration(
@@ -151,7 +154,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                    prefixIcon: Icon(Icons.email_rounded),
+                    prefixIcon: Icon(Icons.email_rounded, color: Colors.black),
                   ),
                 ),
                 TextFormField(
@@ -163,6 +166,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                     }
                     return null;
                   },
+                  style: TextStyle(color: Colors.black),
                   autocorrect: false,
                   decoration: InputDecoration(
                     hintText: "รหัสผ่าน",
@@ -180,7 +184,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                    prefixIcon: Icon(Icons.lock_rounded),
+                    prefixIcon: Icon(Icons.lock_rounded, color: Colors.black),
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(
@@ -191,6 +195,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                         _isObsecurePassword
                             ? Icons.visibility_rounded
                             : Icons.visibility_off_rounded,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -207,6 +212,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                     }
                     return null;
                   },
+                  style: TextStyle(color: Colors.black),
                   autocorrect: false,
                   decoration: InputDecoration(
                     hintText: "ยืนยันรหัสผ่าน",
@@ -224,7 +230,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                    prefixIcon: Icon(Icons.lock_rounded),
+                    prefixIcon: Icon(Icons.lock_rounded, color: Colors.black),
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(
@@ -237,6 +243,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                         _isObsecureConfirmPassword
                             ? Icons.visibility_rounded
                             : Icons.visibility_off_rounded,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -246,7 +253,9 @@ class _RegisterFormState extends State<_RegisterForm> {
                   title: RichText(
                     text: TextSpan(
                       text: "ข้าพเจ้าได้อ่านและรับทราบ ",
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.black),
                       children: [
                         TextSpan(
                           text: "นโยบายความเป็นส่วนตัว",
@@ -254,7 +263,9 @@ class _RegisterFormState extends State<_RegisterForm> {
                         ),
                         TextSpan(
                           text: " และ ",
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.black),
                         ),
                         TextSpan(
                           text: "ข้อกำหนดการใช้บริการ",
@@ -262,7 +273,9 @@ class _RegisterFormState extends State<_RegisterForm> {
                         ),
                         TextSpan(
                           text: " ทั้งหมดเรียบร้อยแล้ว",
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.black),
                         ),
                       ],
                     ),
@@ -297,6 +310,9 @@ class _RegisterFormState extends State<_RegisterForm> {
                                           content: Text(
                                             "🖋️ กรุณายอมรับข้อกำหนดการใช้บริการ",
                                             textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           backgroundColor:
                                               Theme.of(
@@ -329,6 +345,9 @@ class _RegisterFormState extends State<_RegisterForm> {
                                           content: Text(
                                             errorMessage,
                                             textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           backgroundColor:
                                               Theme.of(
@@ -348,10 +367,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
-                                          backgroundColor:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.onPrimary,
+                                          backgroundColor: Colors.white,
                                         ),
                                       );
                                       _usernameController.clear();

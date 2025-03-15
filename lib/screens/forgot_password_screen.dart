@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_recipe/services/auth_service.dart';
+import 'package:my_recipe/widgets/navigation_bar/top_navbar.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
@@ -12,7 +13,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: TopNavBar(title: "", action: []),
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Padding(
         padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
@@ -27,8 +28,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               width: double.infinity,
               child: Text(
                 "ลืมรหัสผ่านใช่หรือไม่?",
-                style: Theme.of(context).textTheme.headlineLarge,
                 textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineLarge?.copyWith(color: Colors.black),
               ),
             ),
             Center(
@@ -37,6 +40,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   Text(
                     'ระบุอีเมลของคุณแล้วเราจะส่งข้อความ\nช่วยรีเซ็ทรหัสผ่านของคุณ',
                     textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black),
                   ),
                 ],
               ),
@@ -65,7 +69,7 @@ class _ResetFormState extends State<ResetForm> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withAlpha(128),
+        color: Colors.white.withAlpha(100),
         borderRadius: BorderRadius.circular(10),
       ),
       padding: EdgeInsets.symmetric(vertical: 50, horizontal: 25),
@@ -75,6 +79,7 @@ class _ResetFormState extends State<ResetForm> {
             key: _formKey,
             child: TextFormField(
               controller: _email,
+              style: TextStyle(color: Colors.black),
               autocorrect: false,
               decoration: InputDecoration(
                 hintText: "อีเมล",
@@ -92,7 +97,7 @@ class _ResetFormState extends State<ResetForm> {
                     color: Theme.of(context).colorScheme.error,
                   ),
                 ),
-                prefixIcon: Icon(Icons.email_rounded),
+                prefixIcon: Icon(Icons.email_rounded, color: Colors.black),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty || !value.contains("@")) {

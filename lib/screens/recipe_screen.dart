@@ -400,8 +400,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
         },
         shape: CircleBorder(),
         child: Icon(
-          Icons.favorite,
-          color: isLikedByUser ? Colors.red[300] : null,
+          isLikedByUser ? Icons.favorite : Icons.favorite_border,
+          size: 30,
         ),
       ),
     );
