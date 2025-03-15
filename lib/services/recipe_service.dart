@@ -136,7 +136,88 @@ class RecipeService {
     }
   }
 
-  // UPDATE
+  // UPDATE: Update an existing recipe in Firestore
+  Future<void> updateRecipe({
+    required String recipeId,
+    required String name,
+    required String category,
+    required String difficulty,
+    required String description,
+    required String ingredient,
+    required String instruction,
+    File? imageFile,
+    File? videoFile,
+    String? imageUrl,
+    String? videoUrl,
+  }) async {
+    try {
+      // If a new image file is provided, delete the old image and upload the new one
+      if (imageFile != null) {
+        // Delete the old image if it exists
+        if (imageUrl != null && imageUrl.isNotEmpty) {
+          await Supabase.instance.client.storage.from('files').remove([
+            "images/${imageUrl.split('/').last}",
+          ]);
+        }
+
+        await Future.delayed(Duration(seconds: 1));
+
+        // Extemsion of the new image
+        final imageExtension = ".${imageFile.path.split('.').last}";
+
+        // Upload the new image
+        imageUrl = await uploadFile(
+          bucket: "files",
+          path: "images/$recipeId$imageExtension",
+          file: imageFile,
+        );
+      }
+
+      // If a new video file is provided, delete the old video and upload the new one
+      if (videoFile != null) {
+        // Delete the old video if it exists
+        if (videoUrl != null && videoUrl.isNotEmpty) {
+          await Supabase.instance.client.storage.from('files').remove([
+            "images/${videoUrl.split('/').last}",
+          ]);
+        }
+
+        await Future.delayed(Duration(seconds: 1));
+
+        // Extension of the new video
+        final videoExtension = ".${videoFile.path.split('.').last}";
+
+        // Upload the new video
+        videoUrl = await uploadFile(
+          bucket: "files",
+          path: "videos/$recipeId$videoExtension",
+          file: videoFile,
+        );
+      }
+
+      // Update the recipe in Firestore
+      await _recipes.doc(recipeId).update({
+        'name': name,
+        'category': category,
+        'difficulty': difficulty,
+        'description': description,
+        'ingredient': ingredient,
+        'instruction': instruction,
+        'imageUrl': imageUrl,
+        'videoUrl': videoUrl,
+        'updatedAt': DateTime.now(),
+      });
+    } catch (e) {
+      print('Update recipe exception: $e');
+    }
+  }
+
+  // UPDATE: Update views of a recipe by recipeId
+  Future<void> updateRecipeViews(String recipeId, int newViews) {
+    return _recipes.doc(recipeId).update({'views': newViews + 1});
+  }
+
+  // UPDATE: Update likes of a recipe by recipeId
   Future<void> updateRecipeLike(String recipeId, List<dynamic> newList) {
     return _recipes.doc(recipeId).update({'likes': newList});
   }

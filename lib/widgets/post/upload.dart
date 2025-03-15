@@ -14,6 +14,8 @@ class UploadButton extends StatefulWidget {
     required this.isRow,
     required this.isVideo,
     required this.onFileSelected, // Callback function
+    this.selectedImageUrl, // Add Selected image URL
+    this.selectedVideoFilename, // Add Selected video filename
   });
 
   final Size btnSize;
@@ -23,6 +25,8 @@ class UploadButton extends StatefulWidget {
   final bool isRow;
   final bool isVideo;
   final Function(File?) onFileSelected; // Callback to pass file
+  final String? selectedImageUrl; // Selected image URL from Supabase
+  final String? selectedVideoFilename; // Selected video filename
 
   @override
   State<UploadButton> createState() => _UploadButtonState();
@@ -72,15 +76,44 @@ class _UploadButtonState extends State<UploadButton> {
 
     if (widget.isRow) widgets.insert(1, const SizedBox(width: 20));
 
+    // Display the previous image or video filename if available
+    if (widget.selectedImageUrl != null && !widget.isVideo) {
+      widgets = [
+        Image.network(
+          widget.selectedImageUrl!,
+          width: widget.btnSize.width,
+          height: widget.btnSize.height,
+          fit: BoxFit.cover,
+        ),
+      ];
+    } else if (widget.selectedVideoFilename != null && widget.isVideo) {
+      // Add the video filename to the existing widgets
+      widgets = [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            widget.selectedVideoFilename!.split('/').last,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ];
+    }
+
     return GestureDetector(
       onTap: pickFile, // Use single method for both image and video
       child: Container(
         width: widget.btnSize.width,
         height: widget.btnSize.height,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
           image:
-              file != null
+              file != null && !widget.isVideo
                   ? DecorationImage(image: FileImage(file!), fit: BoxFit.cover)
                   : null,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -89,7 +122,12 @@ class _UploadButtonState extends State<UploadButton> {
             widget.isRow
                 ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: widgets,
+                  children:
+                      widgets.length > 1
+                          ? widgets
+                          : widgets
+                              .map((widgets) => Expanded(child: widgets))
+                              .toList(),
                 )
                 : Column(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -63,6 +63,7 @@ class FineDropDownBox extends ConsumerStatefulWidget {
     required this.colors,
     required this.id,
     required this.onSelected,
+    this.selectedItem, // Add selectedItem parameter
   });
 
   final String title;
@@ -70,6 +71,7 @@ class FineDropDownBox extends ConsumerStatefulWidget {
   final List<Color> colors;
   final String id;
   final Function(String) onSelected;
+  final String? selectedItem; // Selected item from Firebase
 
   @override
   ConsumerState<FineDropDownBox> createState() => _FineDropDownBoxState();
@@ -77,6 +79,14 @@ class FineDropDownBox extends ConsumerStatefulWidget {
 
 class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
   String? selectedItem;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize selectedItem with the value from Firebase
+    selectedItem = widget.selectedItem;
+  }
+
   @override
   Widget build(BuildContext context) {
     bool showDropDown = ref.watch(dropDownStateProvider(widget.id));
@@ -85,7 +95,7 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
         AnimatedContainer(
           duration: Duration(milliseconds: 200),
           width: 400,
-          height: showDropDown ? 60*widget.items.length.toDouble() : 60,
+          height: showDropDown ? 60 * widget.items.length.toDouble() : 60,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: CustomColorScheme.yellowColor,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_recipe/screens/post_screen.dart';
 import 'package:my_recipe/services/bookmark_service.dart';
 import 'package:my_recipe/services/recipe_service.dart';
 import 'package:my_recipe/widgets/navigation_bar/top_navbar.dart';
@@ -8,7 +9,7 @@ import 'package:my_recipe/widgets/recipe/details.dart';
 import 'package:my_recipe/widgets/recipe/details_bar.dart';
 
 class RecipeScreen extends StatefulWidget {
-  RecipeScreen({super.key, required this.recipe});
+  const RecipeScreen({super.key, required this.recipe});
 
   final Map<String, dynamic> recipe;
   @override
@@ -21,6 +22,16 @@ class _RecipeScreenState extends State<RecipeScreen> {
   final BookmarkService _bookmarkService = BookmarkService();
 
   late bool isLikedByUser;
+
+  // Update the recipe views when the user views the recipe
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _recipeService.updateRecipeViews(
+      widget.recipe['recipeId'],
+      widget.recipe['views'],
+    );
+  }
 
   @override
   void initState() {
@@ -203,7 +214,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                         await _recipeService.deleteRecipe(
                           widget.recipe["recipeId"],
                           "images/${widget.recipe["recipeId"]}",
-                          "video/${widget.recipe["recipeId"]}",
+                          "videos/${widget.recipe["recipeId"]}",
                         );
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -259,7 +270,14 @@ class _RecipeScreenState extends State<RecipeScreen> {
             IconButton(
               icon: Icon(Icons.edit_rounded),
               onPressed: () {
-                Navigator.pushNamed(context, '/post', arguments: widget.recipe);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            PostScreen(recipeId: widget.recipe["recipeId"]),
+                  ),
+                );
               },
             ),
           if (user?.uid == widget.recipe["userId"])

@@ -8,23 +8,28 @@ import 'package:my_recipe/widgets/post/form.dart';
 import 'package:my_recipe/widgets/post/upload.dart';
 
 class PostScreen extends StatefulWidget {
-  const PostScreen({super.key});
+  final String? recipeId;
+
+  const PostScreen({super.key, this.recipeId});
+
   @override
   State<PostScreen> createState() => _PostScreenState();
 }
 
 class _PostScreenState extends State<PostScreen> {
-  final nameController = TextEditingController();
-  final detailController = TextEditingController();
-  final ingredientsController = TextEditingController();
-  final instructionController = TextEditingController();
-  File? image;
-  File? video;
-  String? category;
-  String? difficulty;
-  String? imageErrorMessage;
-  String? categoryErrorMessage;
-  String? difficultyErrorMessage;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _detailController = TextEditingController();
+  final TextEditingController _ingredientsController = TextEditingController();
+  final TextEditingController _instructionController = TextEditingController();
+  String? _category;
+  String? _difficulty;
+  File? _image;
+  File? _video;
+  String? _imageUrl;
+  String? _videoUrl;
+  String? _imageErrorMessage;
+  String? _categoryErrorMessage;
+  String? _difficultyErrorMessage;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -33,21 +38,58 @@ class _PostScreenState extends State<PostScreen> {
   final RecipeService _recipeService = RecipeService();
 
   bool _isPosting = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recipeId != null) {
+      _fetchRecipeData(widget.recipeId!);
+    } else {
+      _isLoading = false;
+    }
+  }
+
+  void _fetchRecipeData(String recipeId) async {
+    final recipeSnapshot = await _recipeService.getRecipeById(recipeId).first;
+
+    if (recipeSnapshot.docs.isNotEmpty) {
+      final recipeData =
+          recipeSnapshot.docs.first.data() as Map<String, dynamic>;
+      setState(() {
+        _nameController.text = recipeData['name'];
+        _detailController.text = recipeData['description'];
+        _ingredientsController.text = recipeData['ingredient'];
+        _instructionController.text = recipeData['instruction'];
+        _category = recipeData['category'];
+        _difficulty = recipeData['difficulty'];
+        _imageUrl = recipeData['imageUrl']; // Initialize image URL
+        _videoUrl = recipeData['videoUrl']; // Initialize video URL
+        _isLoading = false;
+      });
+    } else {
+      // No recipe found, stop loading
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   void handleImageSelected(File? file) {
-    setState(() {
-      image = file;
-      imageErrorMessage = null;
-    });
+    _imageErrorMessage = null;
+    setState(() => _image = file);
   }
 
   void handleVideoSelected(File? file) {
-    setState(() => video = file);
+    setState(() => _video = file);
   }
 
-  // TODO: Implement Edit Recipe (UPDATE)
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -79,12 +121,14 @@ class _PostScreenState extends State<PostScreen> {
                           isRow: false,
                           isVideo: false,
                           onFileSelected: handleImageSelected,
+                          selectedImageUrl:
+                              _imageUrl, // Pass the previous image URL from Firebase
                         ),
-                        if (imageErrorMessage != null)
+                        if (_imageErrorMessage != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
-                              imageErrorMessage!,
+                              _imageErrorMessage!,
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
@@ -95,7 +139,7 @@ class _PostScreenState extends State<PostScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Show a loading indicator while fetching premium status
+                          return CircularProgressIndicator();
                         }
 
                         final bool isPremiumUser = snapshot.data ?? false;
@@ -109,29 +153,53 @@ class _PostScreenState extends State<PostScreen> {
                               isRow: true,
                               isVideo: true,
                               onFileSelected: handleVideoSelected,
+                              selectedVideoFilename:
+                                  _videoUrl, // Pass the previous video filename
                             )
-                            : SizedBox.shrink(); // Hide the button if the user is not premium
+                            : SizedBox.shrink();
                       },
                     ),
                     Column(
                       children: [
                         FineDropDownBox(
                           title: 'ประเภทอาหาร',
-                          items: ['อาหารตามสั่ง', 'ก๋วยเตี๋ยว', 'ฟาสต์ฟู้ด','สลัดและยำ', 'เครื่องดื่ม', 'ขนมทานเล่น', 'อาหารญี่ปุ่น', 'อาหารเกาหลี', 'อาหารอินเดีย'],
-                          colors: [Colors.yellow, Colors.yellow, Colors.yellow,Colors.yellow, Colors.yellow, Colors.yellow,Colors.yellow, Colors.yellow, Colors.yellow],
+                          items: [
+                            'อาหารตามสั่ง',
+                            'ก๋วยเตี๋ยว',
+                            'ฟาสต์ฟู้ด',
+                            'สลัดและยำ',
+                            'เครื่องดื่ม',
+                            'ขนมทานเล่น',
+                            'อาหารญี่ปุ่น',
+                            'อาหารเกาหลี',
+                            'อาหารอินเดีย',
+                          ],
+                          colors: [
+                            Colors.yellow,
+                            Colors.yellow,
+                            Colors.yellow,
+                            Colors.yellow,
+                            Colors.yellow,
+                            Colors.yellow,
+                            Colors.yellow,
+                            Colors.yellow,
+                            Colors.yellow,
+                          ],
                           id: 'cateDropdown',
                           onSelected: (value) {
                             setState(() {
-                              category = value;
-                              categoryErrorMessage = null;
+                              _category = value;
+                              _categoryErrorMessage = null;
                             });
                           },
+                          selectedItem:
+                              _category, // Pass the selected category from Firebase
                         ),
-                        if (categoryErrorMessage != null)
+                        if (_categoryErrorMessage != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
-                              categoryErrorMessage!,
+                              _categoryErrorMessage!,
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
@@ -150,16 +218,17 @@ class _PostScreenState extends State<PostScreen> {
                           id: 'diffDropDown',
                           onSelected: (value) {
                             setState(() {
-                              difficulty = value;
-                              difficultyErrorMessage = null;
+                              _difficulty = value;
+                              _difficultyErrorMessage = null;
                             });
                           },
+                          selectedItem: _difficulty,
                         ),
-                        if (difficultyErrorMessage != null)
+                        if (_difficultyErrorMessage != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
-                              difficultyErrorMessage!,
+                              _difficultyErrorMessage!,
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
@@ -168,7 +237,7 @@ class _PostScreenState extends State<PostScreen> {
                     CustomTextField(
                       label: 'ชื่อเมนู',
                       height: 56,
-                      controller: nameController,
+                      controller: _nameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'กรุณาระบุชื่อเมนู';
@@ -179,7 +248,7 @@ class _PostScreenState extends State<PostScreen> {
                     CustomTextField(
                       label: 'รายละเอียด',
                       height: 150,
-                      controller: detailController,
+                      controller: _detailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'กรุณาระบุรายละเอียด';
@@ -190,7 +259,7 @@ class _PostScreenState extends State<PostScreen> {
                     CustomTextField(
                       label: 'วัตถุดิบที่ใช้',
                       height: 150,
-                      controller: ingredientsController,
+                      controller: _ingredientsController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'กรุณาระบุวัตถุดิบที่ใช้';
@@ -201,7 +270,7 @@ class _PostScreenState extends State<PostScreen> {
                     CustomTextField(
                       label: 'ขั้นตอนวิธีทำ',
                       height: 150,
-                      controller: instructionController,
+                      controller: _instructionController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'กรุณาระบุขั้นตอนวิธีทำ';
@@ -215,77 +284,109 @@ class _PostScreenState extends State<PostScreen> {
                               ? null
                               : () {
                                 if (_formKey.currentState!.validate() &&
-                                    image != null &&
-                                    category != null &&
-                                    difficulty != null) {
-                                  // Debugging
-                                  // print("Recipe Name: ${nameController.text}");
-                                  // print("Details: ${detailController.text}");
-                                  // print("Ingredients: ${ingredientsController.text}");
-                                  // print("Instructions: ${instructionController.text}");
-                                  // print("Category: $category");
-                                  // print("Difficulty: $difficulty");
-                                  // print("Image Path: ${image?.path}");
-                                  // print("Video Path: ${video?.path}");
+                                    (_image != null || _imageUrl != null) &&
+                                    _category != null &&
+                                    _difficulty != null) {
                                   setState(() {
                                     _isPosting = true;
                                   });
-                                  _recipeService.addRecipe(
-                                    userId: _user.uid,
-                                    name: nameController.text,
-                                    category: category!,
-                                    difficulty: difficulty!,
-                                    description: detailController.text,
-                                    ingredient: ingredientsController.text,
-                                    instruction: instructionController.text,
-                                    imageFile: image,
-                                    videoFile: video,
-                                  );
-                                  setState(() {
-                                    _isPosting = false;
-                                  });
-                                  Navigator.of(context).pop();
-                                  ScaffoldMessenger.of(
-                                    context,
-                                  ).clearSnackBars();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "✅ เผยแพร่สูตรอาหารสำเร็จ",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.onSurface,
-                                        ),
-                                      ),
-                                      backgroundColor:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onPrimary,
-                                    ),
-                                  );
-                                } else {
-                                  if (image == null) {
+                                  if (widget.recipeId == null) {
+                                    _recipeService.addRecipe(
+                                      userId: _user.uid,
+                                      name: _nameController.text,
+                                      category: _category!,
+                                      difficulty: _difficulty!,
+                                      description: _detailController.text,
+                                      ingredient: _ingredientsController.text,
+                                      instruction: _instructionController.text,
+                                      imageFile: _image,
+                                      videoFile: _video,
+                                    );
                                     setState(() {
-                                      imageErrorMessage = 'กรุณาเลือกรูปภาพ';
+                                      _isPosting = false;
+                                    });
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).clearSnackBars();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "✅ เผยแพร่สูตรอาหารสำเร็จ",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        backgroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimary,
+                                      ),
+                                    );
+                                  } else {
+                                    // Update the existing recipe
+                                    _recipeService.updateRecipe(
+                                      recipeId: widget.recipeId!,
+                                      name: _nameController.text,
+                                      category: _category!,
+                                      difficulty: _difficulty!,
+                                      description: _detailController.text,
+                                      ingredient: _ingredientsController.text,
+                                      instruction: _instructionController.text,
+                                      imageFile: _image,
+                                      videoFile: _video,
+                                      imageUrl: _imageUrl,
+                                      videoUrl: _videoUrl,
+                                    );
+                                    setState(() {
+                                      _isPosting = false;
+                                    });
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).clearSnackBars();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "✅ อัปเดตสูตรอาหารสำเร็จ",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        backgroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimary,
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  if (_image == null && _imageUrl == null) {
+                                    setState(() {
+                                      _imageErrorMessage = 'กรุณาเลือกรูปภาพ';
                                     });
                                   }
-                                  if (category == null) {
+                                  if (_category == null) {
                                     setState(() {
-                                      categoryErrorMessage =
+                                      _categoryErrorMessage =
                                           'กรุณาเลือกประเภทอาหาร';
                                     });
                                   }
-                                  if (difficulty == null) {
+                                  if (_difficulty == null) {
                                     setState(() {
-                                      difficultyErrorMessage =
+                                      _difficultyErrorMessage =
                                           'กรุณาเลือกระดับความยาก';
                                     });
                                   }
                                 }
-                                //
                               },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -328,7 +429,7 @@ class _PostScreenState extends State<PostScreen> {
   }
 }
 
-// Slide Transiton Build
+// Slide Transition Build
 Route createRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => PostScreen(),
