@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_recipe/screens/forgot_password_screen.dart';
 import 'package:my_recipe/screens/register_screen.dart';
 import 'package:my_recipe/services/auth_service.dart';
+import 'package:my_recipe/services/noti_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -350,6 +351,7 @@ class _LoginFormState extends State<_LoginForm> {
                       setState(() {
                         _isSigningInWithGoogle = false;
                       });
+                      NotiService().scheduleDailyNotifications();
                     },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
             child: Padding(

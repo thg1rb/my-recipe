@@ -9,17 +9,27 @@ import 'package:my_recipe/screens/post_screen.dart';
 import 'package:my_recipe/screens/premium_ad_screen.dart';
 import 'package:my_recipe/screens/register_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:my_recipe/services/noti_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure that widget binding is initialized before calling Firebase.initializeApp()
+  // Ensure Flutter is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize Supabase
   await Supabase.initialize(
     url: "https://wcqmjwveaoxqjubuoena.supabase.co",
     anonKey:
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcW1qd3ZlYW94cWp1YnVvZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3ODMzNzgsImV4cCI6MjA1NzM1OTM3OH0.qYP_P5H9H81yEHddfSa-fLV2vbh3jJwMd5c391W5Ai8",
   );
+
+  // Initialize the notification
+  NotiService().initNotifiction();
+
   runApp(ProviderScope(child: MyApp()));
 }
 
@@ -29,7 +39,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      title: 'MyRecipe! ',
+      title: 'MyRecipe!',
       theme:
           ref.watch(isDarkTheme)
               ? CustomTheme.darkTheme
