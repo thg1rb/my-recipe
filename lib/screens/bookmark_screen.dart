@@ -42,10 +42,15 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     } else {
       _bookmarkTitle.text = bookmark?["name"];
     }
-    showDialog(
-      context: context,
-      builder:
-          (context) => Form(
+
+    // Using custom route for animation
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        barrierColor: Colors.black54,
+        pageBuilder: (BuildContext context, _, __) {
+          return Form(
             key: _formKey,
             child: AlertDialog(
               title: Text(
@@ -144,16 +149,40 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                 ),
               ],
             ),
-          ),
+          );
+        },
+        transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+          // Combined scale and fade transition
+          return ScaleTransition(
+            scale: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutBack,
+              reverseCurve: Curves.easeInBack,
+            ),
+            child: FadeTransition(
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+                reverseCurve: Curves.easeIn,
+              ),
+              child: child,
+            ),
+          );
+        },
+      ),
     );
   }
 
   // DELETE AlertDialog
   void _showDeleteDialog(BuildContext context, {required String bookmarkId}) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
+    // Using custom route for animation
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        barrierColor: Colors.black54,
+        pageBuilder: (BuildContext context, _, __) {
+          return AlertDialog(
             title: Text(
               "ยืนยันการลบบันทึก",
               textAlign: TextAlign.center,
@@ -234,7 +263,32 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                 ],
               ),
             ],
-          ),
+          );
+        },
+        transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+          // Shake and fade animation for delete dialog
+          return FadeTransition(
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOut,
+              reverseCurve: Curves.easeIn,
+            ),
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, -0.1),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.elasticOut,
+                  reverseCurve: Curves.easeIn,
+                ),
+              ),
+              child: child,
+            ),
+          );
+        },
+      ),
     );
   }
 
