@@ -100,7 +100,7 @@ class _FullScreenVideoPlayerState extends State<FullScreenVideoPlayer> {
                     onPressed: () async {
                       final currentPosition = await controller.position;
                       final maxDuration = controller.value.duration;
-                      if (currentPosition != null && maxDuration != null) {
+                      if (currentPosition != null) {
                         final newPosition =
                             currentPosition + const Duration(seconds: 10);
                         controller.seekTo(

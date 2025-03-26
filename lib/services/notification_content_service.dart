@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:my_recipe/models/notification_content.dart';
 
 class NotificationContentService {

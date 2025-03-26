@@ -15,7 +15,6 @@ final Size buttonFixedSize = Size.fromWidth(190);
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
-  final UserService _userService = UserService();
   final AuthServices _authServices = AuthServices();
 
   @override
