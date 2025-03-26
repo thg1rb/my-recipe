@@ -118,10 +118,4 @@ class NotiService {
   Future<void> cancelAllNotifications() async {
     await notificationsPlugin.cancelAll();
   }
-
-  // For testing: Show a sample notification immediately
-  Future<void> showSampleNotification() async {
-    final content = _notiContentService.randomContent;
-    await showNotification(id: 999, title: content.title, body: content.body);
-  }
 }
