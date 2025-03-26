@@ -15,6 +15,7 @@ final Size buttonFixedSize = Size.fromWidth(190);
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
+  final UserService _userService = UserService();
   final AuthServices _authServices = AuthServices();
 
   @override
@@ -30,8 +31,11 @@ class ProfileScreen extends StatelessWidget {
               return Column(
                 children: <Widget>[
                   _ProfileHeader(),
+                  SizedBox(height: 20),
                   _ProfileServices(),
+                  SizedBox(height: 10),
                   _ProfileSetting(),
+                  SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
                     onPressed: () async {
@@ -145,25 +149,43 @@ class _ProfileHeader extends StatelessWidget {
                 style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
                 child: Text("แก้ไขข้อมูล"),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  fixedSize: buttonFixedSize,
-                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                  foregroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PremiumAdScreen()),
-                  );
+              StreamBuilder<bool>(
+                stream: _userService.isPremiumUser(userId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    final bool isPremiumUser = snapshot.data ?? false;
+                    return isPremiumUser
+                        ? SizedBox()
+                        : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: buttonFixedSize,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.primary,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PremiumAdScreen(),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Icon(Icons.stars_rounded),
+                              Text("สมัครพรีเมียม"),
+                            ],
+                          ),
+                        );
+                  }
                 },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.stars_rounded),
-                    Text("สมัครพรีเมียม"),
-                  ],
-                ),
               ),
             ],
           );
@@ -259,8 +281,9 @@ class _ProfileSettingState extends State<_ProfileSetting> {
               final currentTheme = Theme.of(context).brightness;
               return Column(
                 children: <Widget>[
-                  SwitchListTile(
+                  SwitchListTile.adaptive(
                     secondary: Icon(Icons.nights_stay_rounded),
+                    activeColor: Theme.of(context).colorScheme.onPrimary,
                     title: Text("โหมดกลางคืน"),
                     value: ref.watch(isDarkTheme),
                     onChanged: (value) {
@@ -272,8 +295,9 @@ class _ProfileSettingState extends State<_ProfileSetting> {
                     },
                   ),
                   Divider(height: 1, indent: 16, endIndent: 16),
-                  SwitchListTile(
+                  SwitchListTile.adaptive(
                     secondary: Icon(Icons.notifications_active_rounded),
+                    activeColor: Theme.of(context).colorScheme.onPrimary,
                     title: Text("การแจ้งเตือน"),
                     value: false,
                     onChanged: (value) {},
