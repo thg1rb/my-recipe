@@ -42,13 +42,13 @@ class AuthServices {
       await _userService.createUser(
         userId: credential.user!.uid,
         username: username,
-        profileUrl: "", // TODO: Insert the default profile URL here
+        profileUrl: "",
       );
       // Create a default bookmark in Firestore
       final BookmarkService _bookmarkService = BookmarkService();
       await _bookmarkService.createBookmark(
         userId: credential.user!.uid,
-        name: "บันทึกเริ่มต้นของฉัน",
+        name: "🍳 บันทึกเริ่มต้นของฉัน",
       );
       return null;
     } on FirebaseAuthException catch (e) {
@@ -96,7 +96,6 @@ class AuthServices {
               googleUser.displayName?.split(' ')[0] ??
               "User", // Use Google display name as username
           profileUrl:
-              // TODO: Insert the default profile URL here
               googleUser.photoUrl ?? "", // Use Google photo URL as profile URL
         );
         final BookmarkService _bookmarkService = BookmarkService();
@@ -142,7 +141,7 @@ class AuthServices {
   Future<void> sendEmailVerification(String email) async {
     try {
       await _auth.currentUser?.sendEmailVerification();
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -150,7 +149,7 @@ class AuthServices {
   Future<void> sendPasswordResetLink(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
-    }catch(e) {
+    } catch (e) {
       print(e.toString());
     }
   }

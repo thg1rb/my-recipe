@@ -6,7 +6,11 @@ import 'package:my_recipe/services/user_service.dart';
 
 class PremiumAdScreen extends StatelessWidget {
   PremiumAdScreen({super.key});
+
+  // Get the current user and user service
   final User user = FirebaseAuth.instance.currentUser!;
+
+  // Create an instance of the user service
   final UserService _userService = UserService();
 
   @override
@@ -91,18 +95,18 @@ class _PremiumAdDetails extends StatelessWidget {
       child: Wrap(
         runSpacing: 10,
         children: <Widget>[
-          _PremiumAdDetialsCard(
+          _PremiumAdDetailsCard(
             titleIcon: Icons.sick_rounded,
             title: "ผู้ใช้งานทั่วไป",
             desc:
-                "• มีโฆษณา\n• บุ๊คมาร์คได้สูงสุด 3 หมวดหมู่\n• ไม่สามารถรับชมและอัปโหลดวิดิโอ",
+                "• มีโฆษณาระหว่างการใช้งาน\n• สร้างบันทึกอาหารได้สูงสุด 3 บันทึก\n• ไม่สามารถรับชมและอัปโหลดวิดิโอ",
             color: Theme.of(context).colorScheme.error,
           ),
-          _PremiumAdDetialsCard(
+          _PremiumAdDetailsCard(
             titleIcon: Icons.sick_rounded,
             title: "ผู้ใช้งานพรีเมียม",
             desc:
-                "• ไม่มีโฆษณา\n• เพิ่มบุ๊คมาร์คได้ไม่จำกัด\n• สามารถรับชมและอัปโหลดวิดีโอได้",
+                "• ไม่มีโฆษณาระหว่างการใช้งาน\n• สร้างบันทึกสูตรอาหารได้ไม่จำกัด\n• สามารถรับชมและอัปโหลดวิดีโอได้",
             color: Theme.of(context).colorScheme.primary,
           ),
         ],
@@ -111,8 +115,8 @@ class _PremiumAdDetails extends StatelessWidget {
   }
 }
 
-class _PremiumAdDetialsCard extends StatelessWidget {
-  const _PremiumAdDetialsCard({
+class _PremiumAdDetailsCard extends StatelessWidget {
+  const _PremiumAdDetailsCard({
     required IconData titleIcon,
     required String title,
     required String desc,
@@ -129,7 +133,9 @@ class _PremiumAdDetialsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Wrap(
+      alignment: WrapAlignment.center,
+      runSpacing: 10,
       children: <Widget>[
         Row(
           children: <Widget>[
@@ -144,7 +150,7 @@ class _PremiumAdDetialsCard extends StatelessWidget {
           ],
         ),
         Container(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           decoration: BoxDecoration(
             color: _color,
             borderRadius: BorderRadius.circular(20),
@@ -167,12 +173,16 @@ class _PremiumAdFooter extends ConsumerWidget {
   final UserService _userService = UserService();
 
   void showConfirmDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
+    // Using custom route for animation - matching the bookmark_screen.dart animation
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        barrierColor: Colors.black54,
+        pageBuilder: (BuildContext context, _, __) {
+          return AlertDialog(
             title: Text(
-              "ยืนยันการสมัครสมาชิก",
+              "ยืนยันการสมัครพรีเมียม",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
@@ -202,6 +212,7 @@ class _PremiumAdFooter extends ConsumerWidget {
 
                       // Update the user's premium expiry date
                       await _userService.updateUserPremiumExpiryDate(_user.uid);
+                      Navigator.pop(context);
                       Navigator.pushNamed(context, '/home');
                       ScaffoldMessenger.of(context).clearSnackBars();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -221,7 +232,7 @@ class _PremiumAdFooter extends ConsumerWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
-                    child: Text('ยืนยัน'),
+                    child: Text('ยืนยันการชำระเงิน 39฿'),
                   ),
                 ),
                 GestureDetector(
@@ -236,13 +247,36 @@ class _PremiumAdFooter extends ConsumerWidget {
               ],
             ),
             actionsAlignment: MainAxisAlignment.center,
-          ),
+          );
+        },
+        transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+          // Combined scale and fade transition (same as in bookmark_screen.dart)
+          return ScaleTransition(
+            scale: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutBack,
+              reverseCurve: Curves.easeInBack,
+            ),
+            child: FadeTransition(
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+                reverseCurve: Curves.easeIn,
+              ),
+              child: child,
+            ),
+          );
+        },
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
+    return Wrap(
+      direction: Axis.vertical,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 10,
       children: <Widget>[
         ElevatedButton(
           onPressed: () {
@@ -250,13 +284,10 @@ class _PremiumAdFooter extends ConsumerWidget {
           },
           child: Text("สมัครพรีเมียม"),
         ),
-        TextButton(
-          onPressed: () {
+        GestureDetector(
+          onTap: () {
             Navigator.pop(context);
           },
-          style: TextButton.styleFrom(
-            foregroundColor: Theme.of(context).colorScheme.error,
-          ),
           child: Text(
             "กดที่นี่เพื่อปิดหน้าต่าง",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
