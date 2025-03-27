@@ -4,7 +4,7 @@ import 'package:my_recipe/core/theme/custom_theme/color_scheme.dart';
 import 'package:my_recipe/providers/drop_down_state_provider.dart';
 
 class CustomTextField extends StatelessWidget {
-  CustomTextField({
+  const CustomTextField({
     super.key,
     required this.label,
     required this.height,
@@ -19,38 +19,40 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height,
-      child: TextFormField(
-        controller: controller,
-        validator: validator,
-        decoration: InputDecoration(
-          label: Text(label),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.primary,
+          height: height,
+          child: TextFormField(
+            controller: controller,
+            validator: validator,
+            decoration: InputDecoration(
+              hintText: '',
+              helperText: '',
+              errorStyle: TextStyle(fontSize: 14),
+              label: Text(label),
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
             ),
+            textAlignVertical: TextAlignVertical.top,
+            maxLines: null,
+            expands: true,
+            style: TextStyle(fontSize: 14),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              width: 3,
-              color: Theme.of(context).colorScheme.error,
-            ),
-          ),
-        ),
-        textAlignVertical: TextAlignVertical.top,
-        maxLines: null,
-        expands: true,
-        style: TextStyle(fontSize: 14),
-      ),
     );
   }
 }

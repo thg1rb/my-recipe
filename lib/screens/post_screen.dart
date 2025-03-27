@@ -236,7 +236,7 @@ class _PostScreenState extends State<PostScreen> {
                     ),
                     CustomTextField(
                       label: 'ชื่อเมนู',
-                      height: 56,
+                      height: 85,
                       controller: _nameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
