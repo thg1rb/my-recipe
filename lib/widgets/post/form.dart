@@ -97,7 +97,7 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
         AnimatedContainer(
           duration: Duration(milliseconds: 200),
           width: 400,
-          height: showDropDown ? 60 * widget.items.length.toDouble() : 60,
+          height: showDropDown ? 60 * widget.items.length.toDouble() + 60 : 60,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: CustomColorScheme.yellowColor,
@@ -107,6 +107,7 @@ class _FineDropDownBoxState extends ConsumerState<FineDropDownBox> {
               SizedBox(height: 60),
               Expanded(
                 child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: widget.items.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
