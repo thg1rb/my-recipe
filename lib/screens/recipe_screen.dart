@@ -365,7 +365,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                         ),
                       ),
                     )
-                    : Container(
+                    : SizedBox(
                       height: 230,
                       width: double.infinity,
                       child: Image.network(
@@ -382,61 +382,66 @@ class _RecipeScreenState extends State<RecipeScreen> {
                   ),
                   child: Column(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5,
-                          horizontal: 20,
+                      Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        elevation: 2,
+                        shadowColor: Theme.of(context).colorScheme.onPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        width: 350,
-                        decoration: BoxDecoration(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 20,
+                          ),
+                          width: 350,
                           color: Theme.of(context).colorScheme.onPrimary,
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: Column(
-                            children: [
-                              Text(
-                                widget.recipe["name"],
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Column(
+                              children: [
+                                Text(
+                                  widget.recipe["name"],
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                "[${DateTime.fromMillisecondsSinceEpoch(widget.recipe["createdAt"].millisecondsSinceEpoch).toLocal().toString().split('.')[0]}]",
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
+                                Text(
+                                  "[${DateTime.fromMillisecondsSinceEpoch(widget.recipe["createdAt"].millisecondsSinceEpoch).toLocal().toString().split('.')[0]}]",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  _buildIconText(
-                                    context,
-                                    icon: Icons.dining,
-                                    text: widget.recipe["difficulty"],
-                                  ),
-                                  _buildIconText(
-                                    context,
-                                    icon: Icons.remove_red_eye,
-                                    text: widget.recipe["views"].toString(),
-                                  ),
-                                  _buildIconText(
-                                    context,
-                                    icon: Icons.favorite,
-                                    text:
-                                        widget.recipe["likes"].length
-                                            .toString(),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildIconText(
+                                      context,
+                                      icon: Icons.dining,
+                                      text: widget.recipe["difficulty"],
+                                    ),
+                                    _buildIconText(
+                                      context,
+                                      icon: Icons.remove_red_eye,
+                                      text: widget.recipe["views"].toString(),
+                                    ),
+                                    _buildIconText(
+                                      context,
+                                      icon: Icons.favorite,
+                                      text:
+                                          widget.recipe["likes"].length
+                                              .toString(),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -460,18 +465,32 @@ class _RecipeScreenState extends State<RecipeScreen> {
           } else {
             updatedLikes.add(user!.uid);
           }
+
           setState(() {
             isLikedByUser = !isLikedByUser;
           });
+
           await _recipeService.updateRecipeLike(
             widget.recipe['recipeId'],
             updatedLikes,
           );
         },
         shape: CircleBorder(),
-        child: Icon(
-          isLikedByUser ? Icons.favorite : Icons.favorite_border,
-          size: 30,
+        backgroundColor:
+            isLikedByUser
+                ? Colors.redAccent
+                : Theme.of(context).colorScheme.primary,
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 300),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return ScaleTransition(scale: animation, child: child);
+          },
+          child: Icon(
+            isLikedByUser ? Icons.favorite : Icons.favorite_border,
+            key: ValueKey<bool>(isLikedByUser),
+            size: 30,
+            color: Theme.of(context).colorScheme.onSecondary,
+          ),
         ),
       ),
     );

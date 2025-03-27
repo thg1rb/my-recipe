@@ -45,50 +45,53 @@ class Detail extends ConsumerWidget {
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        width: 400,
-        decoration: BoxDecoration(
+      child: Card(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: 2,
+        shadowColor: Theme.of(context).colorScheme.onPrimary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          width: 400,
           color: Theme.of(context).colorScheme.onPrimary,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-        ),
-        child: StreamBuilder<bool?>(
-          stream: _userService.isPremiumUser(user!.uid),
-          builder: (context, snapshot) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (detailBarIdx == 2 &&
-                    snapshot.data == true &&
-                    recipe["videoUrl"] != "")
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+          child: StreamBuilder<bool?>(
+            stream: _userService.isPremiumUser(user!.uid),
+            builder: (context, snapshot) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (detailBarIdx == 2 &&
+                      snapshot.data == true &&
+                      recipe["videoUrl"] != "")
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: VideoPlayerWidget(videoUrl: recipe["videoUrl"]),
                       ),
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: VideoPlayerWidget(videoUrl: recipe["videoUrl"]),
                     ),
-                  ),
-                if (detailBarIdx == 0)
-                  MarkdownBody(
-                    data: recipe["description"] ?? "",
-                    styleSheet: markdownStyleSheet,
-                  )
-                else if (detailBarIdx == 1)
-                  MarkdownBody(
-                    data: recipe["ingredient"] ?? "",
-                    styleSheet: markdownStyleSheet,
-                  )
-                else if (detailBarIdx == 2)
-                  MarkdownBody(
-                    data: recipe["instruction"] ?? "",
-                    styleSheet: markdownStyleSheet,
-                  ),
-              ],
-            );
-          },
+                  if (detailBarIdx == 0)
+                    MarkdownBody(
+                      data: recipe["description"] ?? "",
+                      styleSheet: markdownStyleSheet,
+                    )
+                  else if (detailBarIdx == 1)
+                    MarkdownBody(
+                      data: recipe["ingredient"] ?? "",
+                      styleSheet: markdownStyleSheet,
+                    )
+                  else if (detailBarIdx == 2)
+                    MarkdownBody(
+                      data: recipe["instruction"] ?? "",
+                      styleSheet: markdownStyleSheet,
+                    ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
