@@ -25,7 +25,6 @@ class UserService {
   }
 
   // CREATE
-  // TODO: Return Future<String?> to detect errors
   Future<void> createUser({
     required String userId,
     required String username,
@@ -43,7 +42,14 @@ class UserService {
     }
   }
 
-  // TODO: UPDATE
-
-  // TODO: DELETE
+  // Update the user's premium expiry date
+  Future<void> updateUserPremiumExpiryDate(String userId) async {
+    try {
+      await _users.doc(userId).update({
+        'premiumExpiryDate': DateTime.now().add(Duration(days: 1)),
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 }

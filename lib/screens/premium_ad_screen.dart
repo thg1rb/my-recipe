@@ -163,7 +163,8 @@ class _PremiumAdDetialsCard extends StatelessWidget {
 }
 
 class _PremiumAdFooter extends ConsumerWidget {
-  const _PremiumAdFooter();
+  final User _user = FirebaseAuth.instance.currentUser!;
+  final UserService _userService = UserService();
 
   void showConfirmDialog(BuildContext context, WidgetRef ref) {
     showDialog(
@@ -196,8 +197,11 @@ class _PremiumAdFooter extends ConsumerWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       ref.read(bottomNavbarIndexProvider.notifier).state = 0;
+
+                      // Update the user's premium expiry date
+                      await _userService.updateUserPremiumExpiryDate(_user.uid);
                       Navigator.pushNamed(context, '/home');
                       ScaffoldMessenger.of(context).clearSnackBars();
                       ScaffoldMessenger.of(context).showSnackBar(
