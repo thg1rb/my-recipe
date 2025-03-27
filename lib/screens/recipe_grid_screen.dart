@@ -64,8 +64,9 @@ class _RecipeGridScreenState extends State<RecipeGridScreen> {
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return Center(
                       child: Text(
-                        'ไม่พบสูตรอาหาร',
-                      ), // Thai message for "No recipes found"
+                        'ไม่พบสูตรอาหารในระบบฐานข้อมูล',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                     );
                   } else {
                     // Map and filter recipes
@@ -88,6 +89,7 @@ class _RecipeGridScreenState extends State<RecipeGridScreen> {
                       return Center(
                         child: Text(
                           'ไม่พบสูตรอาหารที่ตรงกับคำค้นหา',
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ), // Thai message for "No matching recipes"
                       );
                     }

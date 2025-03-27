@@ -31,7 +31,6 @@ class HomeScreen extends StatelessWidget {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Wrap(
-            spacing: 10,
             runSpacing: 10,
             children: <Widget>[
               _HomeHeader(),
@@ -153,5 +152,3 @@ class _HomeHeader extends StatelessWidget {
     );
   }
 }
-
-

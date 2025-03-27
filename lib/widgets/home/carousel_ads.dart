@@ -20,49 +20,55 @@ class _CarouselAdsState extends State<CarouselAds> {
       'assets/images/ads3.jpeg',
     ];
 
-    return Column(
-      children: [
-        // Constrain the width to 400
-        SizedBox(
-          width: 400, // Set the width here
-          child: CarouselSlider(
-            carouselController: _controller,
-            options: CarouselOptions(
-              height: 123,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 4),
-              enlargeCenterPage: true,
-              viewportFraction: 1,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        children: [
+          // Constrain the width to 400
+          SizedBox(
+            width: 400, // Set the width here
+            child: CarouselSlider(
+              carouselController: _controller,
+              options: CarouselOptions(
+                height: 123,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 4),
+                enlargeCenterPage: true,
+                viewportFraction: 1,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+              ),
+              items: adsList.map((image) => AdsBox(image: image)).toList(),
             ),
-            items: adsList.map((image) => AdsBox(image: image)).toList(),
           ),
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              adsList.map((url) {
-                int index = adsList.indexOf(url);
-                return Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color:
-                        _currentIndex == index
-                            ? Theme.of(context).colorScheme.primary
-                            : Colors.grey,
-                  ),
-                );
-              }).toList(),
-        ),
-      ],
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:
+                adsList.map((url) {
+                  int index = adsList.indexOf(url);
+                  return Container(
+                    width: 8.0,
+                    height: 8.0,
+                    margin: EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 2.0,
+                    ),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          _currentIndex == index
+                              ? Theme.of(context).colorScheme.primary
+                              : Colors.grey,
+                    ),
+                  );
+                }).toList(),
+          ),
+        ],
+      ),
     );
   }
 }
