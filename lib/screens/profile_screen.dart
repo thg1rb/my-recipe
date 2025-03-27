@@ -168,12 +168,7 @@ class _ProfileHeader extends StatelessWidget {
                                 Theme.of(context).colorScheme.primary,
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PremiumAdScreen(),
-                              ),
-                            );
+                            PremiumAdScreen.navigateTo(context);
                           },
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

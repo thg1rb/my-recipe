@@ -13,6 +13,35 @@ class PremiumAdScreen extends StatelessWidget {
   // Create an instance of the user service
   final UserService _userService = UserService();
 
+  // Static method to navigate to this screen with a center popup animation
+  static void navigateTo(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder:
+            (context, animation, secondaryAnimation) => PremiumAdScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // Combined scale and fade transition to create a center popup effect
+          return ScaleTransition(
+            scale: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutBack,
+              reverseCurve: Curves.easeInBack,
+            ),
+            child: FadeTransition(
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+                reverseCurve: Curves.easeIn,
+              ),
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 450),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
