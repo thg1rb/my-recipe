@@ -272,6 +272,9 @@ class _LoginFormState extends State<_LoginForm> {
                                       );
                                       // Navigate to Home Screen
                                       Navigator.pushNamed(context, "/home");
+                                      // Schedule Daily Notifications
+                                      NotiService()
+                                          .scheduleDailyNotifications();
                                     }
                                   }
                                 },
@@ -351,6 +354,7 @@ class _LoginFormState extends State<_LoginForm> {
                       setState(() {
                         _isSigningInWithGoogle = false;
                       });
+                      // Schedule Daily Notifications
                       NotiService().scheduleDailyNotifications();
                     },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.white),

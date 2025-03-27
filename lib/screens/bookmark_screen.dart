@@ -315,7 +315,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
               } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return Center(
                   child: Text(
-                    'ไม่มีบันทึกสูตรอาหารใดๆ\nโปรดสร้างบันทึกใหม่!',
+                    'ไม่พบบันทึกสูตรอาหาร\nโปรดสร้างบันทึกใหม่!',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),

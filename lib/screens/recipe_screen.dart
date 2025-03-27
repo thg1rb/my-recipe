@@ -41,10 +41,13 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   // Show the bookmark dialog
   void _showBookmarksDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => StreamBuilder<QuerySnapshot>(
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        barrierColor: Colors.black54,
+        pageBuilder: (BuildContext context, _, __) {
+          return StreamBuilder<QuerySnapshot>(
             stream: _bookmarkService.getBookmarksById(user!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -161,16 +164,40 @@ class _RecipeScreenState extends State<RecipeScreen> {
                 );
               }
             },
-          ),
+          );
+        },
+        transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+          // Combined scale and fade transition
+          return ScaleTransition(
+            scale: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutBack,
+              reverseCurve: Curves.easeInBack,
+            ),
+            child: FadeTransition(
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+                reverseCurve: Curves.easeIn,
+              ),
+              child: child,
+            ),
+          );
+        },
+      ),
     );
   }
 
   // show delete dialog
   void _showDeleteDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
+    // Using custom route for animation
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        barrierColor: Colors.black54,
+        pageBuilder: (BuildContext context, _, __) {
+          return AlertDialog(
             title: Text(
               "ยืนยันการลบสูตรอาหาร",
               textAlign: TextAlign.center,
@@ -256,7 +283,32 @@ class _RecipeScreenState extends State<RecipeScreen> {
                 ],
               ),
             ],
-          ),
+          );
+        },
+        transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+          // Shake and fade animation for delete dialog
+          return FadeTransition(
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOut,
+              reverseCurve: Curves.easeIn,
+            ),
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, -0.1),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.elasticOut,
+                  reverseCurve: Curves.easeIn,
+                ),
+              ),
+              child: child,
+            ),
+          );
+        },
+      ),
     );
   }
 
