@@ -34,7 +34,6 @@ class UploadButton extends StatefulWidget {
 
 class _UploadButtonState extends State<UploadButton> {
   File? file;
-
   Future<void> pickFile() async {
     try {
       final picker = ImagePicker();
@@ -46,13 +45,20 @@ class _UploadButtonState extends State<UploadButton> {
       if (pickedFile == null) return;
 
       final selectedFile = File(pickedFile.path);
-      setState(() {
-        file = selectedFile;
-      });
+      
+      if (mounted) {
+        setState(() {
+          file = selectedFile;
+        });
+      }
 
       widget.onFileSelected(selectedFile); // Call callback
     } on PlatformException catch (e) {
-      print('Failed to pick file: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('อัปโหลดไฟล์ล้มเหลว')));
+      }
     }
   }
 
@@ -65,7 +71,7 @@ class _UploadButtonState extends State<UploadButton> {
         size: widget.iconSize,
       ),
       Text(
-        widget.text,
+        widget.isVideo && file != null ? 'อัปโหลดวิดีโอแล้ว' : widget.text,
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.normal,
