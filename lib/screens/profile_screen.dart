@@ -27,14 +27,13 @@ class ProfileScreen extends StatelessWidget {
         children: <Widget>[
           Consumer(
             builder: (context, ref, child) {
-              return Column(
+              return Wrap(
+                runSpacing: 20,
+                alignment: WrapAlignment.center,
                 children: <Widget>[
                   _ProfileHeader(),
-                  SizedBox(height: 20),
                   _ProfileServices(),
-                  SizedBox(height: 10),
                   _ProfileSetting(),
-                  SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(fixedSize: buttonFixedSize),
                     onPressed: () async {

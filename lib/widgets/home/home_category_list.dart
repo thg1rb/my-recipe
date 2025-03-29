@@ -23,7 +23,13 @@ class HomeCategoryList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("หมวดหมู่", style: Theme.of(context).textTheme.headlineMedium),
+        Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: Text(
+            "🧑🏻‍🍳 หมวดหมู่",
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
         SizedBox(
           height: 80,
           child: ListView.separated(
@@ -94,7 +100,7 @@ class _CategoryCard extends StatelessWidget {
               Text(
                 _categoryTitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
                 ),

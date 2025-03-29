@@ -37,15 +37,15 @@ class HomeScreen extends StatelessWidget {
               CarouselAds(),
               HomeCategoryList(),
               HomeRecipeList(
-                title: "แนะนำสำหรับคุณ",
+                title: "😄 แนะนำสำหรับคุณ",
                 queryBuilder: _recipeService.getRecipes,
               ),
               HomeRecipeList(
-                title: "Like มากที่สุด",
+                title: "💕 ถูกใจมากที่สุด",
                 queryBuilder: _recipeService.getMostLikedRecipes,
               ),
               HomeRecipeList(
-                title: "มีวิดีโอให้ดู",
+                title: "🎥 มีวิดีโอให้ดู",
                 queryBuilder: _recipeService.getRecipesWithVideo,
               ),
             ],

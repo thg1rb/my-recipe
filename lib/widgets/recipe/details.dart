@@ -10,7 +10,7 @@ class Detail extends ConsumerWidget {
   Detail({super.key, required this.recipe});
 
   final Map<String, dynamic> recipe;
-  final User? user = FirebaseAuth.instance.currentUser;
+  final User? _user = FirebaseAuth.instance.currentUser;
   final UserService _userService = UserService();
 
   @override
@@ -55,14 +55,17 @@ class Detail extends ConsumerWidget {
           width: 400,
           color: Theme.of(context).colorScheme.onPrimary,
           child: StreamBuilder<bool?>(
-            stream: _userService.isPremiumUser(user!.uid),
+            stream: _userService.isPremiumUser(_user!.uid),
             builder: (context, snapshot) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (detailBarIdx == 2 &&
-                      snapshot.data == true &&
-                      recipe["videoUrl"] != "")
+                  if ((detailBarIdx == 2 &&
+                          snapshot.data == true &&
+                          recipe["videoUrl"] != "") ||
+                      (detailBarIdx == 2 &&
+                          _user.uid == recipe["userId"] &&
+                          recipe["videoUrl"] != ""))
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Container(

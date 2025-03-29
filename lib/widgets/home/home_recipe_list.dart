@@ -22,7 +22,13 @@ class HomeRecipeList extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(_title, style: Theme.of(context).textTheme.headlineMedium),
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Text(
+                _title,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ),
             GestureDetector(
               onTap:
                   () => Navigator.push(
@@ -40,7 +46,8 @@ class HomeRecipeList extends StatelessWidget {
                 children: [
                   Text(
                     "เพิ่มเติม",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontSize: 16,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),

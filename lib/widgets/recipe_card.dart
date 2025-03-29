@@ -67,7 +67,9 @@ class RecipeCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Row(
+                        Wrap(
+                          spacing: 3,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
                             Icon(Icons.favorite_rounded, size: 15),
                             Text(
@@ -76,7 +78,9 @@ class RecipeCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Row(
+                        Wrap(
+                          spacing: 3,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
                             Icon(Icons.local_dining_rounded, size: 15),
                             Text(
