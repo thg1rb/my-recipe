@@ -5,6 +5,17 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 
 class NotiService {
+  // Strategy Pattern - Singleton instance
+  static final NotiService _instance = NotiService._internal();
+
+  // Factory constructor to return the same instance
+  factory NotiService() {
+    return _instance;
+  }
+
+  // Private constructor for singleton
+  NotiService._internal();
+
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
   final NotificationContentService _notiContentService =
       NotificationContentService();
@@ -64,7 +75,7 @@ class NotiService {
 
   // Schedule all daily notifications
   Future<void> scheduleDailyNotifications() async {
-    await _scheduleNotificationAtTime(7, 0); // 7:00 AM
+    await _scheduleNotificationAtTime(16, 41); // 7:00 AM
     await _scheduleNotificationAtTime(12, 0); // 12:00 PM
     await _scheduleNotificationAtTime(17, 0); // 5:00 PM
   }
@@ -116,6 +127,7 @@ class NotiService {
 
   // Cancel all notifications
   Future<void> cancelAllNotifications() async {
+    _isInitialized = false;
     await notificationsPlugin.cancelAll();
   }
 }

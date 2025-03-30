@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_recipe/providers/notification_provider.dart';
 import 'package:my_recipe/screens/forgot_password_screen.dart';
 import 'package:my_recipe/screens/register_screen.dart';
 import 'package:my_recipe/services/auth_service.dart';
@@ -213,92 +215,104 @@ class _LoginFormState extends State<_LoginForm> {
                   children: [
                     SizedBox(
                       width: 230,
-                      child: ElevatedButton(
-                        onPressed: // Disable button if signing in (Prevent multiple requests)
-                            _isSigningIn
-                                ? null
-                                : () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    setState(() {
-                                      _isSigningIn = true;
-                                    });
-                                    final String? errorMessage =
-                                        await _authServices.signInWithManual(
-                                          _emailController.text,
-                                          _passwordController.text,
-                                        );
-                                    setState(() {
-                                      _isSigningIn = false;
-                                    });
-                                    ScaffoldMessenger.of(
-                                      context,
-                                    ).clearSnackBars();
-                                    if (errorMessage != null) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            errorMessage,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.white,
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          return ElevatedButton(
+                            onPressed: // Disable button if signing in (Prevent multiple requests)
+                                _isSigningIn
+                                    ? null
+                                    : () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        setState(() {
+                                          _isSigningIn = true;
+                                        });
+                                        final String? errorMessage =
+                                            await _authServices
+                                                .signInWithManual(
+                                                  _emailController.text,
+                                                  _passwordController.text,
+                                                );
+                                        setState(() {
+                                          _isSigningIn = false;
+                                        });
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).clearSnackBars();
+                                        if (errorMessage != null) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                errorMessage,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              backgroundColor:
+                                                  Theme.of(
+                                                    context,
+                                                  ).colorScheme.error,
                                             ),
-                                          ),
-                                          backgroundColor:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.error,
-                                        ),
-                                      );
-                                    } else {
-                                      // Clear Controllers
-                                      _emailController.clear();
-                                      _passwordController.clear();
-                                      // Show SnackBar
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            "✅ เข้าสู่ระบบสำเร็จ",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.black,
+                                          );
+                                        } else {
+                                          // Clear Controllers
+                                          _emailController.clear();
+                                          _passwordController.clear();
+                                          // Show SnackBar
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                "✅ เข้าสู่ระบบสำเร็จ",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              backgroundColor: Colors.white,
                                             ),
+                                          );
+                                          // Navigate to Home Screen
+                                          Navigator.pushNamed(context, "/home");
+                                          // Schedule Daily Notifications
+                                          ref
+                                              .read(notiServiceProvider)
+                                              .scheduleDailyNotifications();
+                                          // Update notification state
+                                          ref
+                                              .read(
+                                                isNotificationEnabled.notifier,
+                                              )
+                                              .state = true;
+                                        }
+                                      }
+                                    },
+                            child:
+                                _isSigningIn // Show loading indicator if signing in
+                                    ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 3,
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.onPrimary,
                                           ),
-                                          backgroundColor: Colors.white,
                                         ),
-                                      );
-                                      // Navigate to Home Screen
-                                      Navigator.pushNamed(context, "/home");
-                                      // Schedule Daily Notifications
-                                      NotiService()
-                                          .scheduleDailyNotifications();
-                                    }
-                                  }
-                                },
-                        child:
-                            _isSigningIn // Show loading indicator if signing in
-                                ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 3,
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.onPrimary,
-                                      ),
-                                    ),
-                                    Text("กำลังเข้าสู่ระบบ..."),
-                                  ],
-                                )
-                                : Text("เข้าสู่ระบบ"),
+                                        Text("กำลังเข้าสู่ระบบ..."),
+                                      ],
+                                    )
+                                    : Text("เข้าสู่ระบบ"),
+                          );
+                        },
                       ),
                     ),
                   ],

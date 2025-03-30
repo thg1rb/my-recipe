@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/providers/bottom_navbar_provider.dart';
+import 'package:my_recipe/providers/notification_provider.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
 import 'package:my_recipe/screens/premium_ad_screen.dart';
 import 'package:my_recipe/screens/recipe_grid_screen.dart';
@@ -288,12 +289,29 @@ class _ProfileSettingState extends State<_ProfileSetting> {
                     },
                   ),
                   Divider(height: 1, indent: 16, endIndent: 16),
-                  SwitchListTile.adaptive(
-                    secondary: Icon(Icons.notifications_active_rounded),
-                    activeColor: Theme.of(context).colorScheme.onPrimary,
-                    title: Text("การแจ้งเตือน"),
-                    value: false,
-                    onChanged: (value) {},
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final isEnabled = ref.watch(isNotificationEnabled);
+                      final notiService = ref.watch(notiServiceProvider);
+
+                      return SwitchListTile.adaptive(
+                        secondary: Icon(Icons.notifications_active_rounded),
+                        activeColor: Theme.of(context).colorScheme.onPrimary,
+                        title: Text("การแจ้งเตือน"),
+                        value: isEnabled,
+                        onChanged: (value) {
+                          ref.read(isNotificationEnabled.notifier).state =
+                              value;
+
+                          if (value) {
+                            notiService.initNotifiction();
+                            notiService.scheduleDailyNotifications();
+                          } else {
+                            notiService.cancelAllNotifications();
+                          }
+                        },
+                      );
+                    },
                   ),
                 ],
               );
