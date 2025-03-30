@@ -13,7 +13,7 @@ class AuthServices {
         email: emailAddress,
         password: password,
       );
-      print(credential.user?.uid);
+      // print(credential.user?.uid);
       return null; // No error
     } on FirebaseAuthException catch (e) {
       if (e.code == "invalid-email") {
@@ -81,7 +81,7 @@ class AuthServices {
       final UserCredential userCredential = await _auth.signInWithCredential(
         credential,
       );
-      print("Google Sign-In successful: ${userCredential.user?.uid}");
+      // print("Google Sign-In successful: ${userCredential.user?.uid}");
 
       final UserService _userService = UserService();
       final userSnapshot =
@@ -103,9 +103,9 @@ class AuthServices {
           userId: userCredential.user!.uid,
           name: "🍳 บันทึกเริ่มต้นของฉัน",
         );
-        print("New user created in Firestore.");
+        // print("New user created in Firestore.");
       } else {
-        print("User already exists in Firestore.");
+        // print("User already exists in Firestore.");
       }
       return null;
     } on FirebaseAuthException catch (e) {
