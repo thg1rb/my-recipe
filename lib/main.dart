@@ -53,6 +53,7 @@ class MyApp extends ConsumerWidget {
         '/post': (context) => PostScreen(),
         '/contact-us': (context) => ContactUs(),
       },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
