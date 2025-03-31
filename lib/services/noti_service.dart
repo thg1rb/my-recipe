@@ -75,7 +75,7 @@ class NotiService {
 
   // Schedule all daily notifications
   Future<void> scheduleDailyNotifications() async {
-    await _scheduleNotificationAtTime(16, 41); // 7:00 AM
+    await _scheduleNotificationAtTime(7, 00); // 7:00 AM
     await _scheduleNotificationAtTime(12, 0); // 12:00 PM
     await _scheduleNotificationAtTime(17, 0); // 5:00 PM
   }
