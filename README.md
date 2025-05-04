@@ -14,6 +14,8 @@ This application is designed to be a hub for cooking enthusiasts, whether they a
 
 ## 📸 Screenshots
 
+![MyRecipe! Preview](preview.png)
+
 ## 🚀 Features
 
 - <b>View Recipes</b> – Users can view descriptions, ingredients, and step-by-step instructions for all recipes within the app.
@@ -76,8 +78,8 @@ flutter_timezone: ^4.1.0
 - Clone the projects.
 
 ```bash
-git clone ...
-cd ...
+git clone https://github.com/thg1rb/my-recipe.git
+cd my-recipe
 ```
 
 - Get all dependencies.
@@ -91,3 +93,8 @@ flutter pub get
 ```bash
 flutter run
 ```
+
+## 📎 Addition
+
+- [Figma Design](https://www.figma.com/design/f57ukwitagkYS50WAEXneB/MyRecipe!?node-id=0-1&t=rvE1B9uK77SaUaP3-1)
+- [Pitch Deck](https://www.canva.com/design/DAGjGNcuk8s/EUvvb3GQjn6zl0LNqaNe4A/edit?utm_content=DAGjGNcuk8s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
