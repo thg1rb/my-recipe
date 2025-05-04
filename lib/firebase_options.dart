@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -49,23 +50,22 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDzRY7fQnHMzo6K5M_ERK0uZ2bcsZ80-Qg',
-    appId: '1:935896752888:android:f4524f8bf8a8d0737fd10d',
-    messagingSenderId: '935896752888',
-    projectId: 'myrecipe-e33c5',
-    storageBucket: 'myrecipe-e33c5.firebasestorage.app',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env["FIREBASE_ANDROID_API_KEY"]!,
+    appId: dotenv.env["FIREBASE_ANDROID_APP_ID"]!,
+    messagingSenderId: dotenv.env["FIREBASE_ANDROID_MESSAGING_SENDER_ID"]!,
+    projectId: dotenv.env["FIREBASE_ANDROID_PROJECT_ID"]!,
+    storageBucket: dotenv.env["FIREBASE_ANDROID_STORAGE_BUCKET"]!,
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBmufzIGT4kbfrhtPCoMLOOplU1c43cMfc',
-    appId: '1:935896752888:ios:08bb484a92e2aa5a7fd10d',
-    messagingSenderId: '935896752888',
-    projectId: 'myrecipe-e33c5',
-    storageBucket: 'myrecipe-e33c5.firebasestorage.app',
-    androidClientId: '935896752888-t2f37220vktah8og0ni0nc9sd208pa1v.apps.googleusercontent.com',
-    iosClientId: '935896752888-1ldsprhcag4nu39nejrb9aipo3u1il18.apps.googleusercontent.com',
-    iosBundleId: 'com.example.myRecipe',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env["FIREBASE_IOS_API_KEY"]!,
+    appId: dotenv.env["FIREBASE_IOS_APP_ID"]!,
+    messagingSenderId: dotenv.env["FIREBASE_IOS_MESSAGING_SENDER_ID"]!,
+    projectId: dotenv.env["FIREBASE_IOS_PROJECT_ID"]!,
+    storageBucket: dotenv.env["FIREBASE_IOS_STORAGE_BUCKET"]!,
+    androidClientId: dotenv.env["FIREBASE_ANDROID_CLIENT_ID"]!,
+    iosClientId: dotenv.env["FIREBASE_IOS_CLIENT_ID"]!,
+    iosBundleId: dotenv.env["FIREBASE_IOS_BUNDLE_ID"]!,
   );
-
 }

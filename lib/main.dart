@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_recipe/core/theme/theme.dart';
 import 'package:my_recipe/providers/theme_provider.dart';
@@ -13,18 +14,20 @@ import 'package:my_recipe/services/noti_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
 
-void main() async {
+Future<void> main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize .env File
+  await dotenv.load(fileName: ".env");
 
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize Supabase
   await Supabase.initialize(
-    url: "https://wcqmjwveaoxqjubuoena.supabase.co",
-    anonKey:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcW1qd3ZlYW94cWp1YnVvZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3ODMzNzgsImV4cCI6MjA1NzM1OTM3OH0.qYP_P5H9H81yEHddfSa-fLV2vbh3jJwMd5c391W5Ai8",
+    url: dotenv.env["SUPABASE_URL"]!,
+    anonKey: dotenv.env["SUPABASE_ANON_KEY"]!,
   );
 
   // Initialize the notification
