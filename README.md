@@ -71,6 +71,7 @@ carousel_slider: ^5.0.0
 flutter_local_notifications: ^19.0.0
 timezone: ^0.10.0
 flutter_timezone: ^4.1.0
+flutter_dotenv: ^5.2.1
 ```
 
 ## 🧑🏻‍💻 Getting Started
