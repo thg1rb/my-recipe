@@ -1,6 +1,13 @@
-# 🍳 MyRecipe!
+<h1 align="center">
+  <br>
+  <img src="./logo.png" alt="" width="200" >
+  <br>
+  <br>
+  <span>🍳 MyRecipe!</span>
+  <br>
+</h1>
 
-> Share and inspire cooking experiences.
+<p align="center">Share and inspire cooking experiences.</p>
 
 ## 💭 Pain Points
 
